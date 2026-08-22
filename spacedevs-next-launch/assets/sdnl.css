@@ -1,0 +1,275 @@
+/**
+ * SpaceDevs Next Launch
+ *
+ * Deliberately quiet. It inherits the theme's fonts and colors and exposes a
+ * handful of custom properties so a theme can override anything without
+ * fighting specificity. Set --sdnl-* on .sdnl or any ancestor.
+ */
+
+.sdnl,
+.sdnl *,
+.sdnl *::before,
+.sdnl *::after {
+	box-sizing: border-box;
+}
+
+.sdnl {
+	--sdnl-gap: 1rem;
+	--sdnl-radius: 6px;
+	--sdnl-bg: transparent;
+	--sdnl-fg: inherit;
+	--sdnl-border: rgba( 0, 0, 0, 0.12 );
+	--sdnl-muted: rgba( 0, 0, 0, 0.6 );
+	--sdnl-badge-bg: rgba( 0, 0, 0, 0.06 );
+	--sdnl-badge-fg: inherit;
+	--sdnl-go: #1f7a3d;
+	--sdnl-hold: #9a6300;
+	--sdnl-tbd: #4a4a4a;
+
+	font-size: inherit;
+	color: var( --sdnl-fg );
+	background: var( --sdnl-bg );
+	border-radius: var( --sdnl-radius );
+}
+
+.sdnl__heading {
+	margin: 0 0 var( --sdnl-gap );
+}
+
+.sdnl__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var( --sdnl-gap );
+}
+
+.sdnl__item {
+	margin: 0;
+	padding: var( --sdnl-gap );
+	border: 1px solid var( --sdnl-border );
+	border-radius: var( --sdnl-radius );
+}
+
+.sdnl__media {
+	margin: calc( var( --sdnl-gap ) * -1 ) calc( var( --sdnl-gap ) * -1 ) var( --sdnl-gap );
+	overflow: hidden;
+	border-radius: var( --sdnl-radius ) var( --sdnl-radius ) 0 0;
+}
+
+.sdnl__image {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+
+.sdnl__status {
+	display: inline-block;
+	margin-bottom: 0.4em;
+	padding: 0.15em 0.6em;
+	border-radius: 999px;
+	background: var( --sdnl-badge-bg );
+	color: var( --sdnl-badge-fg );
+	font-size: 0.75em;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.sdnl__status--go,
+.sdnl__status--success {
+	color: var( --sdnl-go );
+}
+
+.sdnl__status--hold,
+.sdnl__status--in-flight {
+	color: var( --sdnl-hold );
+}
+
+.sdnl__status--tbd,
+.sdnl__status--tbc {
+	color: var( --sdnl-tbd );
+}
+
+.sdnl__name {
+	margin: 0 0 0.25em;
+	font-size: 1.15em;
+	line-height: 1.25;
+}
+
+.sdnl__link {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.sdnl__meta,
+.sdnl__pad,
+.sdnl__time {
+	margin: 0 0 0.25em;
+	color: var( --sdnl-muted );
+	font-size: 0.9em;
+}
+
+.sdnl__countdown {
+	margin: 0.5em 0;
+	font-variant-numeric: tabular-nums;
+	font-size: 1.05em;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.sdnl__description {
+	margin: 0.6em 0 0;
+	font-size: 0.92em;
+}
+
+.sdnl__empty {
+	margin: 0;
+	color: var( --sdnl-muted );
+}
+
+/* List layout: image beside the text. */
+.sdnl--list .sdnl__item {
+	display: grid;
+	grid-template-columns: minmax( 0, 160px ) minmax( 0, 1fr );
+	gap: var( --sdnl-gap );
+	align-items: start;
+}
+
+.sdnl--list .sdnl__media {
+	margin: 0;
+	border-radius: var( --sdnl-radius );
+}
+
+.sdnl--list .sdnl__image {
+	aspect-ratio: 1 / 1;
+}
+
+@media ( max-width: 600px ) {
+	.sdnl--list .sdnl__item {
+		grid-template-columns: minmax( 0, 1fr );
+	}
+}
+
+/* Compact layout: a single line of text, no chrome. */
+.sdnl--compact .sdnl__item {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+.sdnl--compact .sdnl__media {
+	display: none;
+}
+
+.sdnl--compact .sdnl__name {
+	font-size: 1em;
+	display: inline;
+}
+
+.sdnl--compact .sdnl__countdown {
+	font-size: 1em;
+}
+
+/*
+ * Slider: one launch visible at a time, paged with the prev/next arrows.
+ * sdnl.js slides .sdnl__list by setting its transform directly; this stays a
+ * plain stacked list without JS, so nothing traps a visitor on a single item.
+ */
+.sdnl--slider .sdnl__viewport {
+	position: relative;
+	overflow: hidden;
+}
+
+.sdnl--slider .sdnl__list {
+	display: flex;
+	gap: 0;
+	transition: transform 0.35s ease;
+}
+
+.sdnl--slider .sdnl__list > .sdnl__item {
+	flex: 0 0 100%;
+	min-width: 0;
+	/* Clearance so the overlaid arrows never sit on top of text, regardless
+	   of how much padding the chosen layout gives .sdnl__item on its own. */
+	padding-left: 2.75rem;
+	padding-right: 2.75rem;
+}
+
+.sdnl__arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 1;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transform: translateY( -50% );
+	border: 1px solid var( --sdnl-border );
+	border-radius: 999px;
+	background: var( --sdnl-badge-bg );
+	color: inherit;
+	font-size: 1.3rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.sdnl__arrow--prev {
+	left: 0.5rem;
+}
+
+.sdnl__arrow--next {
+	right: 0.5rem;
+}
+
+@media ( prefers-color-scheme: dark ) {
+	.sdnl {
+		--sdnl-border: rgba( 255, 255, 255, 0.18 );
+		--sdnl-muted: rgba( 255, 255, 255, 0.65 );
+		--sdnl-badge-bg: rgba( 255, 255, 255, 0.1 );
+		--sdnl-go: #6ede93;
+		--sdnl-hold: #f0c060;
+		--sdnl-tbd: #b9b9b9;
+	}
+}
+
+/*
+ * Explicit theme="light" / theme="dark", for placing the widget on a surface
+ * that doesn't match the visitor's OS preference. These come after the
+ * prefers-color-scheme block above so an explicit choice always wins.
+ */
+.sdnl--theme-light {
+	--sdnl-bg: #ffffff;
+	--sdnl-fg: #1a1a1a;
+	--sdnl-border: rgba( 0, 0, 0, 0.12 );
+	--sdnl-muted: rgba( 0, 0, 0, 0.6 );
+	--sdnl-badge-bg: rgba( 0, 0, 0, 0.06 );
+	--sdnl-go: #1f7a3d;
+	--sdnl-hold: #9a6300;
+	--sdnl-tbd: #4a4a4a;
+}
+
+.sdnl--theme-dark {
+	--sdnl-bg: #1b1e23;
+	--sdnl-fg: #f5f5f5;
+	--sdnl-border: rgba( 255, 255, 255, 0.18 );
+	--sdnl-muted: rgba( 255, 255, 255, 0.65 );
+	--sdnl-badge-bg: rgba( 255, 255, 255, 0.1 );
+	--sdnl-go: #6ede93;
+	--sdnl-hold: #f0c060;
+	--sdnl-tbd: #b9b9b9;
+}
+
+/*
+ * An explicit theme colors the whole widget as one surface (heading and empty
+ * state included), not just each launch item, so it needs its own padding.
+ */
+.sdnl--theme-light,
+.sdnl--theme-dark {
+	padding: var( --sdnl-gap );
+}
