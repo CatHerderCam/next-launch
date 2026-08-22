@@ -55,7 +55,7 @@ class SDNL_Shortcode {
 			// renders plain text. The API does not expose a public detail page.
 			'link'        => '',
 			'timezone'    => 'site',
-			'empty_text'  => __( 'No upcoming launches scheduled.', 'spacedevs-next-launch' ),
+			'empty_text'  => __( 'No upcoming launches scheduled.', 'next-launch' ),
 			'class'       => '',
 		);
 
@@ -124,7 +124,7 @@ class SDNL_Shortcode {
 			echo '<div class="sdnl__viewport">';
 			printf(
 				'<button type="button" class="sdnl__arrow sdnl__arrow--prev" aria-label="%s">&#8249;</button>',
-				esc_attr__( 'Previous launch', 'spacedevs-next-launch' )
+				esc_attr__( 'Previous launch', 'next-launch' )
 			);
 		}
 
@@ -139,7 +139,7 @@ class SDNL_Shortcode {
 		if ( $slider ) {
 			printf(
 				'<button type="button" class="sdnl__arrow sdnl__arrow--next" aria-label="%s">&#8250;</button>',
-				esc_attr__( 'Next launch', 'spacedevs-next-launch' )
+				esc_attr__( 'Next launch', 'next-launch' )
 			);
 			echo '</div>';
 		}
@@ -289,12 +289,12 @@ class SDNL_Shortcode {
 		$diff = $timestamp - time();
 
 		if ( $diff <= 0 ) {
-			return __( 'Launching now', 'spacedevs-next-launch' );
+			return __( 'Launching now', 'next-launch' );
 		}
 
 		return sprintf(
 			/* translators: %s: human readable time difference, for example "2 days". */
-			__( 'T-minus %s', 'spacedevs-next-launch' ),
+			__( 'T-minus %s', 'next-launch' ),
 			human_time_diff( time(), $timestamp )
 		);
 	}

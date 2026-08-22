@@ -89,7 +89,7 @@ class SDNL_API {
 		// Back off after a failure so a broken API does not mean a request on
 		// every single page view.
 		if ( ! $force && get_transient( $key . '_fail' ) ) {
-			return self::stale( $key, new WP_Error( 'sdnl_backoff', __( 'Waiting before retrying the launch API.', 'spacedevs-next-launch' ) ) );
+			return self::stale( $key, new WP_Error( 'sdnl_backoff', __( 'Waiting before retrying the launch API.', 'next-launch' ) ) );
 		}
 
 		$args = array(
@@ -129,7 +129,7 @@ class SDNL_API {
 
 			return self::stale(
 				$key,
-				new WP_Error( 'sdnl_rate_limited', __( 'The launch API rate limit was reached.', 'spacedevs-next-launch' ) )
+				new WP_Error( 'sdnl_rate_limited', __( 'The launch API rate limit was reached.', 'next-launch' ) )
 			);
 		}
 
@@ -142,7 +142,7 @@ class SDNL_API {
 					'sdnl_http_error',
 					sprintf(
 						/* translators: %d: HTTP status code. */
-						__( 'The launch API returned status %d.', 'spacedevs-next-launch' ),
+						__( 'The launch API returned status %d.', 'next-launch' ),
 						$code
 					)
 				)
@@ -156,7 +156,7 @@ class SDNL_API {
 
 			return self::stale(
 				$key,
-				new WP_Error( 'sdnl_bad_payload', __( 'The launch API response could not be read.', 'spacedevs-next-launch' ) )
+				new WP_Error( 'sdnl_bad_payload', __( 'The launch API response could not be read.', 'next-launch' ) )
 			);
 		}
 
@@ -316,7 +316,7 @@ class SDNL_API {
 				'sdnl_http_error',
 				sprintf(
 					/* translators: %d: HTTP status code. */
-					__( 'The launch API returned status %d.', 'spacedevs-next-launch' ),
+					__( 'The launch API returned status %d.', 'next-launch' ),
 					$code
 				)
 			);
@@ -325,7 +325,7 @@ class SDNL_API {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( ! is_array( $body ) || ! isset( $body['results'] ) || ! is_array( $body['results'] ) ) {
-			return new WP_Error( 'sdnl_bad_payload', __( 'The location list could not be read.', 'spacedevs-next-launch' ) );
+			return new WP_Error( 'sdnl_bad_payload', __( 'The location list could not be read.', 'next-launch' ) );
 		}
 
 		$locations = array();

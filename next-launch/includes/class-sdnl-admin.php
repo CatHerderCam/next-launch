@@ -26,8 +26,8 @@ class SDNL_Admin {
 	 */
 	public static function add_page() {
 		add_options_page(
-			__( 'Next Launch', 'spacedevs-next-launch' ),
-			__( 'Next Launch', 'spacedevs-next-launch' ),
+			__( 'Next Launch', 'next-launch' ),
+			__( 'Next Launch', 'next-launch' ),
 			'manage_options',
 			self::PAGE,
 			array( __CLASS__, 'render_page' )
@@ -54,7 +54,7 @@ class SDNL_Admin {
 	 */
 	public static function handle_flush() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have permission to do that.', 'spacedevs-next-launch' ) );
+			wp_die( esc_html__( 'You do not have permission to do that.', 'next-launch' ) );
 		}
 
 		check_admin_referer( 'sdnl_flush_cache' );
@@ -79,7 +79,7 @@ class SDNL_Admin {
 	 */
 	public static function ajax_search_locations() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'spacedevs-next-launch' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'next-launch' ) ), 403 );
 		}
 
 		check_ajax_referer( 'sdnl_locations', 'nonce' );
@@ -107,11 +107,11 @@ class SDNL_Admin {
 		$flushed = isset( $_GET['flushed'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['flushed'] ) );
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Next Launch', 'spacedevs-next-launch' ); ?></h1>
+			<h1><?php esc_html_e( 'Next Launch', 'next-launch' ); ?></h1>
 
 			<?php if ( $flushed ) : ?>
 				<div class="notice notice-success is-dismissible">
-					<p><?php esc_html_e( 'Cached launch data cleared.', 'spacedevs-next-launch' ); ?></p>
+					<p><?php esc_html_e( 'Cached launch data cleared.', 'next-launch' ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -121,7 +121,7 @@ class SDNL_Admin {
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
-							<label for="sdnl-locations"><?php esc_html_e( 'Default locations', 'spacedevs-next-launch' ); ?></label>
+							<label for="sdnl-locations"><?php esc_html_e( 'Default locations', 'next-launch' ); ?></label>
 						</th>
 						<td>
 							<input
@@ -131,13 +131,13 @@ class SDNL_Admin {
 								name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[default_locations]"
 								value="<?php echo esc_attr( $settings['default_locations'] ); ?>" />
 							<p class="description">
-								<?php esc_html_e( 'Comma separated location IDs. Leave empty to show launches from anywhere. Use the search below to find IDs.', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'Comma separated location IDs. Leave empty to show launches from anywhere. Use the search below to find IDs.', 'next-launch' ); ?>
 							</p>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="sdnl-limit"><?php esc_html_e( 'Default number of launches', 'spacedevs-next-launch' ); ?></label>
+							<label for="sdnl-limit"><?php esc_html_e( 'Default number of launches', 'next-launch' ); ?></label>
 						</th>
 						<td>
 							<input
@@ -151,7 +151,7 @@ class SDNL_Admin {
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="sdnl-ttl"><?php esc_html_e( 'Cache lifetime', 'spacedevs-next-launch' ); ?></label>
+							<label for="sdnl-ttl"><?php esc_html_e( 'Cache lifetime', 'next-launch' ); ?></label>
 						</th>
 						<td>
 							<input
@@ -161,14 +161,14 @@ class SDNL_Admin {
 								step="60"
 								name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[cache_ttl]"
 								value="<?php echo esc_attr( $settings['cache_ttl'] ); ?>" />
-							<?php esc_html_e( 'seconds', 'spacedevs-next-launch' ); ?>
+							<?php esc_html_e( 'seconds', 'next-launch' ); ?>
 							<p class="description">
-								<?php esc_html_e( 'Minimum 300. The free API tier allows roughly 15 requests per hour, so short lifetimes will get the site throttled.', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'Minimum 300. The free API tier allows roughly 15 requests per hour, so short lifetimes will get the site throttled.', 'next-launch' ); ?>
 							</p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Development endpoint', 'spacedevs-next-launch' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Development endpoint', 'next-launch' ); ?></th>
 						<td>
 							<label>
 								<input
@@ -176,15 +176,15 @@ class SDNL_Admin {
 									value="1"
 									name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[use_dev_endpoint]"
 									<?php checked( $settings['use_dev_endpoint'], 1 ); ?> />
-								<?php esc_html_e( 'Use lldev.thespacedevs.com instead of the production API', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'Use lldev.thespacedevs.com instead of the production API', 'next-launch' ); ?>
 							</label>
 							<p class="description">
-								<?php esc_html_e( 'The development endpoint serves cached, possibly stale data but has a looser rate limit. Useful while building a page. Turn this off before launch.', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'The development endpoint serves cached, possibly stale data but has a looser rate limit. Useful while building a page. Turn this off before launch.', 'next-launch' ); ?>
 							</p>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Stylesheet', 'spacedevs-next-launch' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Stylesheet', 'next-launch' ); ?></th>
 						<td>
 							<label>
 								<input
@@ -192,10 +192,10 @@ class SDNL_Admin {
 									value="1"
 									name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[load_css]"
 									<?php checked( $settings['load_css'], 1 ); ?> />
-								<?php esc_html_e( 'Load the bundled stylesheet', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'Load the bundled stylesheet', 'next-launch' ); ?>
 							</label>
 							<p class="description">
-								<?php esc_html_e( 'Turn this off if you are styling the markup in your theme.', 'spacedevs-next-launch' ); ?>
+								<?php esc_html_e( 'Turn this off if you are styling the markup in your theme.', 'next-launch' ); ?>
 							</p>
 						</td>
 					</tr>
@@ -206,50 +206,50 @@ class SDNL_Admin {
 
 			<hr />
 
-			<h2><?php esc_html_e( 'Find location IDs', 'spacedevs-next-launch' ); ?></h2>
-			<p><?php esc_html_e( 'Search the API for a launch site, then copy its ID into the field above or into a shortcode.', 'spacedevs-next-launch' ); ?></p>
+			<h2><?php esc_html_e( 'Find location IDs', 'next-launch' ); ?></h2>
+			<p><?php esc_html_e( 'Search the API for a launch site, then copy its ID into the field above or into a shortcode.', 'next-launch' ); ?></p>
 
 			<p>
-				<input type="search" id="sdnl-loc-search" class="regular-text" placeholder="<?php esc_attr_e( 'Cape Canaveral', 'spacedevs-next-launch' ); ?>" />
-				<button type="button" class="button" id="sdnl-loc-go"><?php esc_html_e( 'Search', 'spacedevs-next-launch' ); ?></button>
+				<input type="search" id="sdnl-loc-search" class="regular-text" placeholder="<?php esc_attr_e( 'Cape Canaveral', 'next-launch' ); ?>" />
+				<button type="button" class="button" id="sdnl-loc-go"><?php esc_html_e( 'Search', 'next-launch' ); ?></button>
 			</p>
 
 			<div id="sdnl-loc-results"></div>
 
 			<hr />
 
-			<h2><?php esc_html_e( 'Shortcode', 'spacedevs-next-launch' ); ?></h2>
-			<p><code>[next_launch]</code> <?php esc_html_e( 'uses the defaults above. Every default can be overridden per shortcode:', 'spacedevs-next-launch' ); ?></p>
+			<h2><?php esc_html_e( 'Shortcode', 'next-launch' ); ?></h2>
+			<p><code>[next_launch]</code> <?php esc_html_e( 'uses the defaults above. Every default can be overridden per shortcode:', 'next-launch' ); ?></p>
 			<p><code>[next_launch location="12,27" limit="3" layout="list" countdown="yes" image="no"]</code></p>
 
 			<table class="widefat striped" style="max-width:820px">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Attribute', 'spacedevs-next-launch' ); ?></th>
-						<th><?php esc_html_e( 'Accepts', 'spacedevs-next-launch' ); ?></th>
-						<th><?php esc_html_e( 'What it does', 'spacedevs-next-launch' ); ?></th>
+						<th><?php esc_html_e( 'Attribute', 'next-launch' ); ?></th>
+						<th><?php esc_html_e( 'Accepts', 'next-launch' ); ?></th>
+						<th><?php esc_html_e( 'What it does', 'next-launch' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 					$rows = array(
-						array( 'location', '12,27', __( 'Which launch sites to include. Empty means worldwide.', 'spacedevs-next-launch' ) ),
-						array( 'limit', '1-10', __( 'How many upcoming launches to show.', 'spacedevs-next-launch' ) ),
-						array( 'layout', 'card, list, compact', __( 'Presentation style.', 'spacedevs-next-launch' ) ),
-						array( 'theme', 'auto, light, dark', __( 'Color surface. "auto" blends into the page and follows the visitor\'s OS preference; "light" or "dark" force a matching card background regardless of where it\'s placed.', 'spacedevs-next-launch' ) ),
-						array( 'slider', 'yes, no', __( 'Show one launch at a time with prev/next arrows instead of stacking them. Only takes effect when more than one launch is showing.', 'spacedevs-next-launch' ) ),
-						array( 'title', __( 'any text', 'spacedevs-next-launch' ), __( 'Optional heading above the results.', 'spacedevs-next-launch' ) ),
-						array( 'countdown', 'yes, no', __( 'Live countdown clock.', 'spacedevs-next-launch' ) ),
-						array( 'image', 'yes, no', __( 'Rocket photo from the API.', 'spacedevs-next-launch' ) ),
-						array( 'description', 'yes, no', __( 'Mission summary, trimmed to 45 words.', 'spacedevs-next-launch' ) ),
-						array( 'provider', 'yes, no', __( 'Rocket and launch provider names.', 'spacedevs-next-launch' ) ),
-						array( 'pad', 'yes, no', __( 'Pad and location names.', 'spacedevs-next-launch' ) ),
-						array( 'orbit', 'yes, no', __( 'Target orbit.', 'spacedevs-next-launch' ) ),
-						array( 'status', 'yes, no', __( 'Go / TBD status badge.', 'spacedevs-next-launch' ) ),
-						array( 'link', __( 'a URL', 'spacedevs-next-launch' ), __( 'Wraps the mission name in a link to a page of your choosing.', 'spacedevs-next-launch' ) ),
-						array( 'timezone', 'site, viewer, utc', __( 'Whose clock the launch time is shown in. "viewer" needs JavaScript.', 'spacedevs-next-launch' ) ),
-						array( 'empty_text', __( 'any text', 'spacedevs-next-launch' ), __( 'Shown when nothing is scheduled or the API is unreachable.', 'spacedevs-next-launch' ) ),
-						array( 'class', __( 'a CSS class', 'spacedevs-next-launch' ), __( 'Extra class on the wrapper for theme styling.', 'spacedevs-next-launch' ) ),
+						array( 'location', '12,27', __( 'Which launch sites to include. Empty means worldwide.', 'next-launch' ) ),
+						array( 'limit', '1-10', __( 'How many upcoming launches to show.', 'next-launch' ) ),
+						array( 'layout', 'card, list, compact', __( 'Presentation style.', 'next-launch' ) ),
+						array( 'theme', 'auto, light, dark', __( 'Color surface. "auto" blends into the page and follows the visitor\'s OS preference; "light" or "dark" force a matching card background regardless of where it\'s placed.', 'next-launch' ) ),
+						array( 'slider', 'yes, no', __( 'Show one launch at a time with prev/next arrows instead of stacking them. Only takes effect when more than one launch is showing.', 'next-launch' ) ),
+						array( 'title', __( 'any text', 'next-launch' ), __( 'Optional heading above the results.', 'next-launch' ) ),
+						array( 'countdown', 'yes, no', __( 'Live countdown clock.', 'next-launch' ) ),
+						array( 'image', 'yes, no', __( 'Rocket photo from the API.', 'next-launch' ) ),
+						array( 'description', 'yes, no', __( 'Mission summary, trimmed to 45 words.', 'next-launch' ) ),
+						array( 'provider', 'yes, no', __( 'Rocket and launch provider names.', 'next-launch' ) ),
+						array( 'pad', 'yes, no', __( 'Pad and location names.', 'next-launch' ) ),
+						array( 'orbit', 'yes, no', __( 'Target orbit.', 'next-launch' ) ),
+						array( 'status', 'yes, no', __( 'Go / TBD status badge.', 'next-launch' ) ),
+						array( 'link', __( 'a URL', 'next-launch' ), __( 'Wraps the mission name in a link to a page of your choosing.', 'next-launch' ) ),
+						array( 'timezone', 'site, viewer, utc', __( 'Whose clock the launch time is shown in. "viewer" needs JavaScript.', 'next-launch' ) ),
+						array( 'empty_text', __( 'any text', 'next-launch' ), __( 'Shown when nothing is scheduled or the API is unreachable.', 'next-launch' ) ),
+						array( 'class', __( 'a CSS class', 'next-launch' ), __( 'Extra class on the wrapper for theme styling.', 'next-launch' ) ),
 					);
 
 					foreach ( $rows as $row ) {
@@ -266,7 +266,7 @@ class SDNL_Admin {
 
 			<hr />
 
-			<h2><?php esc_html_e( 'Cache', 'spacedevs-next-launch' ); ?></h2>
+			<h2><?php esc_html_e( 'Cache', 'next-launch' ); ?></h2>
 			<p>
 				<?php
 				$next = wp_next_scheduled( SDNL_Cron::HOOK );
@@ -274,11 +274,11 @@ class SDNL_Admin {
 				if ( $next ) {
 					printf(
 						/* translators: %s: formatted date and time. */
-						esc_html__( 'Next background refresh: %s', 'spacedevs-next-launch' ),
+						esc_html__( 'Next background refresh: %s', 'next-launch' ),
 						esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $next ) )
 					);
 				} else {
-					esc_html_e( 'No background refresh is scheduled. Deactivate and reactivate the plugin to restore it.', 'spacedevs-next-launch' );
+					esc_html_e( 'No background refresh is scheduled. Deactivate and reactivate the plugin to restore it.', 'next-launch' );
 				}
 				?>
 			</p>
@@ -286,14 +286,14 @@ class SDNL_Admin {
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="sdnl_flush_cache" />
 				<?php wp_nonce_field( 'sdnl_flush_cache' ); ?>
-				<?php submit_button( __( 'Clear cached launch data', 'spacedevs-next-launch' ), 'secondary', 'submit', false ); ?>
+				<?php submit_button( __( 'Clear cached launch data', 'next-launch' ), 'secondary', 'submit', false ); ?>
 			</form>
 
 			<p class="description" style="margin-top:1em">
 				<?php
 				printf(
 					/* translators: %s: link to the Launch Library documentation. */
-					esc_html__( 'Data from The Space Devs Launch Library 2. Review their terms and attribution guidance at %s.', 'spacedevs-next-launch' ),
+					esc_html__( 'Data from The Space Devs Launch Library 2. Review their terms and attribution guidance at %s.', 'next-launch' ),
 					'<a href="https://thespacedevs.com/llapi" target="_blank" rel="noopener noreferrer">thespacedevs.com/llapi</a>'
 				);
 				?>
@@ -326,7 +326,7 @@ class SDNL_Admin {
 					return;
 				}
 
-				results.textContent = <?php echo wp_json_encode( __( 'Searching…', 'spacedevs-next-launch' ) ); ?>;
+				results.textContent = <?php echo wp_json_encode( __( 'Searching…', 'next-launch' ) ); ?>;
 
 				var body = new URLSearchParams();
 				body.append( 'action', 'sdnl_search_locations' );
@@ -343,21 +343,21 @@ class SDNL_Admin {
 					if ( ! payload || ! payload.success ) {
 						results.textContent = ( payload && payload.data && payload.data.message )
 							? payload.data.message
-							: <?php echo wp_json_encode( __( 'Search failed.', 'spacedevs-next-launch' ) ); ?>;
+							: <?php echo wp_json_encode( __( 'Search failed.', 'next-launch' ) ); ?>;
 						return;
 					}
 
 					var list = payload.data.locations || [];
 
 					if ( ! list.length ) {
-						results.textContent = <?php echo wp_json_encode( __( 'No matching launch sites.', 'spacedevs-next-launch' ) ); ?>;
+						results.textContent = <?php echo wp_json_encode( __( 'No matching launch sites.', 'next-launch' ) ); ?>;
 						return;
 					}
 
 					var html = '<table class="widefat striped" style="max-width:640px"><thead><tr>' +
-						'<th style="width:80px"><?php echo esc_js( __( 'ID', 'spacedevs-next-launch' ) ); ?></th>' +
-						'<th><?php echo esc_js( __( 'Launch site', 'spacedevs-next-launch' ) ); ?></th>' +
-						'<th style="width:90px"><?php echo esc_js( __( 'Country', 'spacedevs-next-launch' ) ); ?></th>' +
+						'<th style="width:80px"><?php echo esc_js( __( 'ID', 'next-launch' ) ); ?></th>' +
+						'<th><?php echo esc_js( __( 'Launch site', 'next-launch' ) ); ?></th>' +
+						'<th style="width:90px"><?php echo esc_js( __( 'Country', 'next-launch' ) ); ?></th>' +
 						'</tr></thead><tbody>';
 
 					list.forEach( function ( item ) {
@@ -369,7 +369,7 @@ class SDNL_Admin {
 					html += '</tbody></table>';
 					results.innerHTML = html;
 				} ).catch( function () {
-					results.textContent = <?php echo wp_json_encode( __( 'Search failed.', 'spacedevs-next-launch' ) ); ?>;
+					results.textContent = <?php echo wp_json_encode( __( 'Search failed.', 'next-launch' ) ); ?>;
 				} );
 			}
 

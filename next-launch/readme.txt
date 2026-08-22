@@ -1,10 +1,10 @@
 === SpaceDevs Next Launch ===
-Contributors: kmdg
+Contributors: catherdercam
 Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,7 +40,7 @@ This plugin connects to The Space Devs' Launch Library 2 API to retrieve upcomin
 == Installation ==
 
 1. Take a backup of your site first.
-2. Upload the plugin through Plugins > Add New > Upload Plugin, or upload the `spacedevs-next-launch` folder to `wp-content/plugins/`.
+2. Upload the plugin through Plugins > Add New > Upload Plugin, or upload the `next-launch` folder to `wp-content/plugins/`.
 3. Activate the plugin.
 4. Go to Settings > Next Launch to set default locations, and Settings > Next Launch Builder to build a shortcode visually.
 5. Place `[next_launch]` (or a customized version of it) into any post, page, or widget area that supports shortcodes.
@@ -69,6 +69,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 
 == Changelog ==
 
+= 1.1.1 =
+* Fixed: the plugin folder and main file were renamed from `spacedevs-next-launch` to `next-launch` to match the plugin's slug and text domain.
+
 = 1.1.0 =
 * Added: a visual Shortcode Builder admin screen with toggle switches, dropdowns, and a live, copyable shortcode preview.
 * Added: a searchable, multi-select location picker backed by the live API.
@@ -82,6 +85,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Renames the plugin folder and main file to `next-launch` to match the plugin slug. Deactivate and delete the old `spacedevs-next-launch` install before activating this version.
 
 = 1.1.0 =
 Adds a visual shortcode builder, light/dark themes, and a slider mode. Fixes a location-search bug and a display bug that could show already-flown launches. No settings are changed by this update.
