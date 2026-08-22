@@ -104,7 +104,7 @@ class SDNL_Shortcode {
 			// Never surface an API error to a site visitor. Log it and show the
 			// same neutral message as an empty result.
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				error_log( 'SpaceDevs Next Launch: ' . $launches->get_error_message() ); // phpcs:ignore
+				error_log( 'Next Launch: ' . $launches->get_error_message() ); // phpcs:ignore
 			}
 
 			echo '<p class="sdnl__empty">' . esc_html( $atts['empty_text'] ) . '</p>';

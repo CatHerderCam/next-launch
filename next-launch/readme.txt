@@ -1,10 +1,10 @@
-=== SpaceDevs Next Launch ===
+=== Next Launch ===
 Contributors: catherdercam
 Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Shortcode widget showing upcoming rocket launches from the launch sites you choo
 
 == Description ==
 
-SpaceDevs Next Launch adds a `[next_launch]` shortcode that displays upcoming rocket launches, pulled from The Space Devs' free Launch Library 2 API. Point it at any launch site (or all of them), pick how much detail to show, and drop it into a post, page, or widget area.
+Next Launch adds a `[next_launch]` shortcode that displays upcoming rocket launches, pulled from The Space Devs' free Launch Library 2 API. Point it at any launch site (or all of them), pick how much detail to show, and drop it into a post, page, or widget area.
 
 **Features**
 
@@ -69,6 +69,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 
 == Changelog ==
 
+= 1.1.2 =
+* Changed: plugin name shortened from "SpaceDevs Next Launch" to "Next Launch" to match the plugin slug and text domain.
+
 = 1.1.1 =
 * Fixed: the plugin folder and main file were renamed from `spacedevs-next-launch` to `next-launch` to match the plugin's slug and text domain.
 
@@ -85,6 +88,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.2 =
+Plugin display name is now "Next Launch" instead of "SpaceDevs Next Launch." No functional changes.
 
 = 1.1.1 =
 Renames the plugin folder and main file to `next-launch` to match the plugin slug. Deactivate and delete the old `spacedevs-next-launch` install before activating this version.
