@@ -1,12 +1,11 @@
 <?php
 /**
  * Plugin Name:       Next Launch
- * Plugin URI:        https://thespacedevs.com/llapi
  * Description:       Shortcode that displays upcoming rocket launches from the launch locations you choose, using The Space Devs Launch Library 2 API.
- * Version:           1.1.2
+ * Version:           1.1.3
  * Requires at least: 5.8
  * Requires PHP:      7.4
- * Author:            KMDG
+ * Author:            catherdercam
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       next-launch
@@ -14,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SDNL_VERSION', '1.1.2' );
+define( 'SDNL_VERSION', '1.1.3' );
 define( 'SDNL_FILE', __FILE__ );
 define( 'SDNL_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SDNL_URL', plugin_dir_url( __FILE__ ) );

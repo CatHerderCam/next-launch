@@ -4,7 +4,7 @@ Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,10 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 
 == Changelog ==
 
+= 1.1.3 =
+* Changed: plugin header author updated to `catherdercam`; removed the `Plugin URI` header.
+* Fixed: a zip-packaging issue where the plugin's main file could be extracted with an incorrect path, causing header detection to fail.
+
 = 1.1.2 =
 * Changed: plugin name shortened from "SpaceDevs Next Launch" to "Next Launch" to match the plugin slug and text domain.
 
@@ -88,6 +92,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.3 =
+Packaging and plugin-header metadata fix only. No functional changes.
 
 = 1.1.2 =
 Plugin display name is now "Next Launch" instead of "SpaceDevs Next Launch." No functional changes.
