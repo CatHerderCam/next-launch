@@ -1,5 +1,5 @@
 /**
- * Next Launch shortcode builder.
+ * Next Rocket Launch Tracker shortcode builder.
  *
  * Reads the form fields on the builder screen, assembles a [next_launch]
  * shortcode string, and offers a one-click copy. Every field is optional;

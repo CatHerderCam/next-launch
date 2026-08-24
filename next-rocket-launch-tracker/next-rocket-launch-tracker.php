@@ -1,19 +1,19 @@
 <?php
 /**
- * Plugin Name:       Next Launch
+ * Plugin Name:       Next Rocket Launch Tracker
  * Description:       Shortcode that displays upcoming rocket launches from the launch locations you choose, using The Space Devs Launch Library 2 API.
- * Version:           1.1.4
+ * Version:           1.1.5
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            catherdercam
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       next-launch
+ * Text Domain:       next-rocket-launch-tracker
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SDNL_VERSION', '1.1.4' );
+define( 'SDNL_VERSION', '1.1.5' );
 define( 'SDNL_FILE', __FILE__ );
 define( 'SDNL_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SDNL_URL', plugin_dir_url( __FILE__ ) );

@@ -1,5 +1,5 @@
 /**
- * Next Launch front-end behaviour.
+ * Next Rocket Launch Tracker front-end behaviour.
  *
  * Two jobs: tick the countdowns, and rewrite launch times into the visitor's
  * own timezone where the shortcode asked for it. No dependencies.

@@ -20,15 +20,15 @@ class SDNL_Elementor {
 	}
 
 	/**
-	 * Add a "Next Launch" category to the Elementor widget panel.
+	 * Add a "Next Rocket Launch Tracker" category to the Elementor widget panel.
 	 *
 	 * @param object $elements_manager Elementor's Elements_Manager instance.
 	 */
 	public static function register_category( $elements_manager ) {
 		$elements_manager->add_category(
-			'next-launch',
+			'next-rocket-launch-tracker',
 			array(
-				'title' => __( 'Next Launch', 'next-launch' ),
+				'title' => __( 'Next Rocket Launch Tracker', 'next-rocket-launch-tracker' ),
 				'icon'  => 'eicon-countdown',
 			)
 		);

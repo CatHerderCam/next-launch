@@ -19,13 +19,13 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 	 */
 	protected static function toggle_fields() {
 		return array(
-			'countdown'   => array( __( 'Countdown', 'next-launch' ), true ),
-			'image'       => array( __( 'Rocket image', 'next-launch' ), true ),
-			'provider'    => array( __( 'Provider & rocket name', 'next-launch' ), true ),
-			'pad'         => array( __( 'Pad & location', 'next-launch' ), true ),
-			'orbit'       => array( __( 'Target orbit', 'next-launch' ), false ),
-			'status'      => array( __( 'Status badge', 'next-launch' ), true ),
-			'description' => array( __( 'Mission description', 'next-launch' ), false ),
+			'countdown'   => array( __( 'Countdown', 'next-rocket-launch-tracker' ), true ),
+			'image'       => array( __( 'Rocket image', 'next-rocket-launch-tracker' ), true ),
+			'provider'    => array( __( 'Provider & rocket name', 'next-rocket-launch-tracker' ), true ),
+			'pad'         => array( __( 'Pad & location', 'next-rocket-launch-tracker' ), true ),
+			'orbit'       => array( __( 'Target orbit', 'next-rocket-launch-tracker' ), false ),
+			'status'      => array( __( 'Status badge', 'next-rocket-launch-tracker' ), true ),
+			'description' => array( __( 'Mission description', 'next-rocket-launch-tracker' ), false ),
 		);
 	}
 
@@ -34,7 +34,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'Next Launch', 'next-launch' );
+		return __( 'Next Rocket Launch Tracker', 'next-rocket-launch-tracker' );
 	}
 
 	public function get_icon() {
@@ -42,7 +42,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 	}
 
 	public function get_categories() {
-		return array( 'next-launch' );
+		return array( 'next-rocket-launch-tracker' );
 	}
 
 	public function get_keywords() {
@@ -72,35 +72,35 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'sdnl_section_content',
 			array(
-				'label' => __( 'Content', 'next-launch' ),
+				'label' => __( 'Content', 'next-rocket-launch-tracker' ),
 			)
 		);
 
 		$this->add_control(
 			'title',
 			array(
-				'label'       => __( 'Heading', 'next-launch' ),
+				'label'       => __( 'Heading', 'next-rocket-launch-tracker' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
 				'default'     => '',
-				'placeholder' => __( 'Optional heading', 'next-launch' ),
+				'placeholder' => __( 'Optional heading', 'next-rocket-launch-tracker' ),
 			)
 		);
 
 		$this->add_control(
 			'location',
 			array(
-				'label'       => __( 'Locations', 'next-launch' ),
+				'label'       => __( 'Locations', 'next-rocket-launch-tracker' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
 				'default'     => SDNL_Settings::get( 'default_locations' ),
 				'placeholder' => '12,27',
-				'description' => __( 'Comma separated launch location IDs. Leave empty to show launches from anywhere. Find IDs on Settings > Next Launch.', 'next-launch' ),
+				'description' => __( 'Comma separated launch location IDs. Leave empty to show launches from anywhere. Find IDs on Settings > Next Rocket Launch Tracker.', 'next-rocket-launch-tracker' ),
 			)
 		);
 
 		$this->add_control(
 			'limit',
 			array(
-				'label'   => __( 'Number of launches', 'next-launch' ),
+				'label'   => __( 'Number of launches', 'next-rocket-launch-tracker' ),
 				'type'    => \Elementor\Controls_Manager::NUMBER,
 				'min'     => 1,
 				'max'     => 10,
@@ -112,13 +112,13 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'layout',
 			array(
-				'label'   => __( 'Layout', 'next-launch' ),
+				'label'   => __( 'Layout', 'next-rocket-launch-tracker' ),
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => 'card',
 				'options' => array(
-					'card'    => __( 'Card', 'next-launch' ),
-					'list'    => __( 'List', 'next-launch' ),
-					'compact' => __( 'Compact', 'next-launch' ),
+					'card'    => __( 'Card', 'next-rocket-launch-tracker' ),
+					'list'    => __( 'List', 'next-rocket-launch-tracker' ),
+					'compact' => __( 'Compact', 'next-rocket-launch-tracker' ),
 				),
 			)
 		);
@@ -126,13 +126,13 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'theme',
 			array(
-				'label'   => __( 'Color surface', 'next-launch' ),
+				'label'   => __( 'Color surface', 'next-rocket-launch-tracker' ),
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => 'auto',
 				'options' => array(
-					'auto'  => __( 'Auto', 'next-launch' ),
-					'light' => __( 'Light', 'next-launch' ),
-					'dark'  => __( 'Dark', 'next-launch' ),
+					'auto'  => __( 'Auto', 'next-rocket-launch-tracker' ),
+					'light' => __( 'Light', 'next-rocket-launch-tracker' ),
+					'dark'  => __( 'Dark', 'next-rocket-launch-tracker' ),
 				),
 			)
 		);
@@ -140,26 +140,26 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'slider',
 			array(
-				'label'        => __( 'Slider mode', 'next-launch' ),
+				'label'        => __( 'Slider mode', 'next-rocket-launch-tracker' ),
 				'type'         => \Elementor\Controls_Manager::SWITCHER,
-				'label_on'     => __( 'Yes', 'next-launch' ),
-				'label_off'    => __( 'No', 'next-launch' ),
+				'label_on'     => __( 'Yes', 'next-rocket-launch-tracker' ),
+				'label_off'    => __( 'No', 'next-rocket-launch-tracker' ),
 				'return_value' => 'yes',
 				'default'      => '',
-				'description'  => __( 'Shows one launch at a time with prev/next arrows. Only takes effect when more than one launch is showing.', 'next-launch' ),
+				'description'  => __( 'Shows one launch at a time with prev/next arrows. Only takes effect when more than one launch is showing.', 'next-rocket-launch-tracker' ),
 			)
 		);
 
 		$this->add_control(
 			'timezone',
 			array(
-				'label'   => __( 'Launch time shown in', 'next-launch' ),
+				'label'   => __( 'Launch time shown in', 'next-rocket-launch-tracker' ),
 				'type'    => \Elementor\Controls_Manager::SELECT,
 				'default' => 'site',
 				'options' => array(
-					'site'   => __( 'Site timezone', 'next-launch' ),
-					'viewer' => __( "Visitor's timezone", 'next-launch' ),
-					'utc'    => __( 'UTC', 'next-launch' ),
+					'site'   => __( 'Site timezone', 'next-rocket-launch-tracker' ),
+					'viewer' => __( "Visitor's timezone", 'next-rocket-launch-tracker' ),
+					'utc'    => __( 'UTC', 'next-rocket-launch-tracker' ),
 				),
 			)
 		);
@@ -167,21 +167,21 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->add_control(
 			'link',
 			array(
-				'label'       => __( 'Mission link URL', 'next-launch' ),
+				'label'       => __( 'Mission link URL', 'next-rocket-launch-tracker' ),
 				'type'        => \Elementor\Controls_Manager::URL,
 				'default'     => array(
 					'url' => '',
 				),
-				'description' => __( 'Optional. Wraps the mission name in a link to a page of your choosing.', 'next-launch' ),
+				'description' => __( 'Optional. Wraps the mission name in a link to a page of your choosing.', 'next-rocket-launch-tracker' ),
 			)
 		);
 
 		$this->add_control(
 			'empty_text',
 			array(
-				'label'   => __( 'Empty message', 'next-launch' ),
+				'label'   => __( 'Empty message', 'next-rocket-launch-tracker' ),
 				'type'    => \Elementor\Controls_Manager::TEXT,
-				'default' => __( 'No upcoming launches scheduled.', 'next-launch' ),
+				'default' => __( 'No upcoming launches scheduled.', 'next-rocket-launch-tracker' ),
 			)
 		);
 
@@ -190,7 +190,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->start_controls_section(
 			'sdnl_section_fields',
 			array(
-				'label' => __( 'Fields to show', 'next-launch' ),
+				'label' => __( 'Fields to show', 'next-rocket-launch-tracker' ),
 			)
 		);
 
@@ -202,8 +202,8 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 				array(
 					'label'        => $label,
 					'type'         => \Elementor\Controls_Manager::SWITCHER,
-					'label_on'     => __( 'Show', 'next-launch' ),
-					'label_off'    => __( 'Hide', 'next-launch' ),
+					'label_on'     => __( 'Show', 'next-rocket-launch-tracker' ),
+					'label_off'    => __( 'Hide', 'next-rocket-launch-tracker' ),
 					'return_value' => 'yes',
 					'default'      => $default_on ? 'yes' : '',
 				)
