@@ -4,7 +4,7 @@ Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,7 @@ Next Launch adds a `[next_launch]` shortcode that displays upcoming rocket launc
 * Optional light or dark color theme that forces a matching card background, independent of the surrounding page or the visitor's OS preference.
 * A visual Shortcode Builder screen (Settings > Next Launch Builder) with toggle switches, dropdowns, and a live-updating shortcode preview you can copy with one click.
 * A searchable, multi-select location picker backed by the live API, pre-populated with the most active launch sites.
+* An Elementor widget (search for "Next Launch" in the widget panel) with the same options as the shortcode, for sites that build pages with Elementor.
 * Launches never call the API during a normal page view: a WP-Cron job refreshes a cached copy on a schedule you control, and the last good response is served if the API is ever unreachable or rate-limited.
 * Automatically filters out launches the upstream API still lists as "upcoming" moments after they've already flown.
 
@@ -67,7 +68,14 @@ Yes. The `theme` attribute (or the "Color surface" option in the Shortcode Build
 
 Yes. Without JavaScript the launches simply stack vertically like the non-slider layouts, so nothing traps a visitor on a single item.
 
+= Does this work with Elementor? =
+
+Yes. If Elementor is active, a "Next Launch" widget appears in the widget panel (search for it, or find it under the Next Launch category) with the same options as the shortcode.
+
 == Changelog ==
+
+= 1.1.4 =
+* Added: a Next Launch widget for Elementor, with the same options as the `[next_launch]` shortcode. Only loads on sites that have Elementor active.
 
 = 1.1.3 =
 * Changed: plugin header author updated to `catherdercam`; removed the `Plugin URI` header.
@@ -92,6 +100,9 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.4 =
+Adds an Elementor widget with the same options as the shortcode. No settings are changed by this update.
 
 = 1.1.3 =
 Packaging and plugin-header metadata fix only. No functional changes.

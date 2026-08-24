@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Next Launch
  * Description:       Shortcode that displays upcoming rocket launches from the launch locations you choose, using The Space Devs Launch Library 2 API.
- * Version:           1.1.3
+ * Version:           1.1.4
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            catherdercam
@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SDNL_VERSION', '1.1.3' );
+define( 'SDNL_VERSION', '1.1.4' );
 define( 'SDNL_FILE', __FILE__ );
 define( 'SDNL_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SDNL_URL', plugin_dir_url( __FILE__ ) );
@@ -22,6 +22,7 @@ require_once SDNL_PATH . 'includes/class-sdnl-settings.php';
 require_once SDNL_PATH . 'includes/class-sdnl-api.php';
 require_once SDNL_PATH . 'includes/class-sdnl-shortcode.php';
 require_once SDNL_PATH . 'includes/class-sdnl-cron.php';
+require_once SDNL_PATH . 'includes/class-sdnl-elementor.php';
 
 if ( is_admin() ) {
 	require_once SDNL_PATH . 'includes/class-sdnl-admin.php';
@@ -34,6 +35,7 @@ if ( is_admin() ) {
 function sdnl_init() {
 	SDNL_Shortcode::init();
 	SDNL_Cron::init();
+	SDNL_Elementor::init();
 
 	if ( is_admin() ) {
 		SDNL_Admin::init();
