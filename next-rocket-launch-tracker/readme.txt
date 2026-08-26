@@ -4,7 +4,7 @@ Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,11 +12,11 @@ Shortcode widget showing upcoming rocket launches from the launch sites you choo
 
 == Description ==
 
-Next Rocket Launch Tracker adds a `[next_launch]` shortcode that displays upcoming rocket launches, pulled from The Space Devs' free Launch Library 2 API. Point it at any launch site (or all of them), pick how much detail to show, and drop it into a post, page, or widget area.
+Next Rocket Launch Tracker adds a `[nextrlt_next_launch]` shortcode that displays upcoming rocket launches, pulled from The Space Devs' free Launch Library 2 API. Point it at any launch site (or all of them), pick how much detail to show, and drop it into a post, page, or widget area.
 
 **Features**
 
-* `[next_launch]` shortcode with attributes for location, launch count, layout, color theme, and which fields to show (image, countdown, provider, pad, orbit, status, description).
+* `[nextrlt_next_launch]` shortcode with attributes for location, launch count, layout, color theme, and which fields to show (image, countdown, provider, pad, orbit, status, description).
 * Three layouts (card, list, compact), each with an optional slider mode that shows one launch at a time with prev/next arrows.
 * Optional light or dark color theme that forces a matching card background, independent of the surrounding page or the visitor's OS preference.
 * A visual Shortcode Builder screen (Settings > Next Rocket Launch Tracker Builder) with toggle switches, dropdowns, and a live-updating shortcode preview you can copy with one click.
@@ -36,7 +36,8 @@ This plugin connects to The Space Devs' Launch Library 2 API to retrieve upcomin
 * **Service:** The Space Devs Launch Library 2 (`https://ll.thespacedevs.com`), or `https://lldev.thespacedevs.com` if the "development endpoint" option is turned on in Settings > Next Rocket Launch Tracker.
 * **What is sent:** only the numeric launch-location IDs configured in the shortcode/settings, and any text an administrator types into the location search box on the Settings or Shortcode Builder screens. No visitor data, personal information, or site content is ever transmitted.
 * **When it's sent:** on a background WP-Cron schedule (hourly by default, configurable) to refresh the cached launch list, and on-demand when an administrator uses the location search. The API is never called while a visitor is viewing a page.
-* **Terms:** [thespacedevs.com/llapi](https://www.thespacedevs.com/llapi). Review their terms before relying on this plugin for a production site; the API is funded through Patreon and a credit link is appreciated.
+* **Terms of Service:** [github.com/TheSpaceDevs/Tutorials](https://github.com/TheSpaceDevs/Tutorials/blob/main/faqs/faq_TSD.md). Review their terms before relying on this plugin for a production site; the API is funded through Patreon and a credit link is appreciated.
+* **Privacy Policy:** [thespacedevs.com/privacy](https://thespacedevs.com/privacy)
 
 == Installation ==
 
@@ -44,7 +45,7 @@ This plugin connects to The Space Devs' Launch Library 2 API to retrieve upcomin
 2. Upload the plugin through Plugins > Add New > Upload Plugin, or upload the `next-rocket-launch-tracker` folder to `wp-content/plugins/`.
 3. Activate the plugin.
 4. Go to Settings > Next Rocket Launch Tracker to set default locations, and Settings > Next Rocket Launch Tracker Builder to build a shortcode visually.
-5. Place `[next_launch]` (or a customized version of it) into any post, page, or widget area that supports shortcodes.
+5. Place `[nextrlt_next_launch]` (or a customized version of it) into any post, page, or widget area that supports shortcodes.
 
 == Frequently Asked Questions ==
 
@@ -62,7 +63,7 @@ Visitors see the last successfully cached data instead of an empty box. Only if 
 
 = Can I make it match my site's dark or light design? =
 
-Yes. The `theme` attribute (or the "Color surface" option in the Shortcode Builder) accepts `auto` (blends into the page, follows the visitor's OS preference), `light`, or `dark`. The bundled CSS also exposes custom properties (`--sdnl-border`, `--sdnl-muted`, `--sdnl-go`, and others) for deeper theme integration, or you can disable the bundled stylesheet entirely in Settings.
+Yes. The `theme` attribute (or the "Color surface" option in the Shortcode Builder) accepts `auto` (blends into the page, follows the visitor's OS preference), `light`, or `dark`. The bundled CSS also exposes custom properties (`--nextrlt-border`, `--nextrlt-muted`, `--nextrlt-go`, and others) for deeper theme integration, or you can disable the bundled stylesheet entirely in Settings.
 
 = Does the slider work without JavaScript? =
 
@@ -73,6 +74,13 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 Yes. If Elementor is active, a "Next Rocket Launch Tracker" widget appears in the widget panel (search for it, or find it under the Next Rocket Launch Tracker category) with the same options as the shortcode.
 
 == Changelog ==
+
+= 1.1.6 =
+* Changed: every function, class, option, hook, nonce, shortcode tag, CSS class, and file name now uses the `nextrlt` prefix (was `sdnl`), per WordPress.org plugin review feedback about unique naming.
+* Changed: the shortcode tag is now `[nextrlt_next_launch]` (was `[next_launch]`) so it carries a unique prefix too.
+* Fixed: the location-search script on Settings > Next Rocket Launch Tracker is now loaded with `wp_enqueue_script()` instead of being printed inline.
+* Changed: the readme's External services section now links directly to the Launch Library 2 API's terms of service and privacy policy.
+* Fixed: WordPress Coding Standards (PHPCS/WPCS) issues — missing docblocks, array formatting, and the reserved word `default` used as a parameter name.
 
 = 1.1.5 =
 * Changed: plugin renamed from "Next Launch" to "Next Rocket Launch Tracker" (slug and text domain now `next-rocket-launch-tracker`), per WordPress.org plugin review naming/trademark feedback.
@@ -103,6 +111,9 @@ Yes. If Elementor is active, a "Next Rocket Launch Tracker" widget appears in th
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.6 =
+Shortcode tag changed from [next_launch] to [nextrlt_next_launch]. Update any posts/pages using the old tag after upgrading.
 
 = 1.1.5 =
 Renamed to "Next Rocket Launch Tracker" (slug: next-rocket-launch-tracker). If upgrading from the old "next-launch" slug, deactivate and delete that install first; your settings are unaffected.

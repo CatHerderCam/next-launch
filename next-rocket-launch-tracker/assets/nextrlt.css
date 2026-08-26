@@ -1,0 +1,275 @@
+/**
+ * Next Rocket Launch Tracker
+ *
+ * Deliberately quiet. It inherits the theme's fonts and colors and exposes a
+ * handful of custom properties so a theme can override anything without
+ * fighting specificity. Set --nextrlt-* on .nextrlt or any ancestor.
+ */
+
+.nextrlt,
+.nextrlt *,
+.nextrlt *::before,
+.nextrlt *::after {
+	box-sizing: border-box;
+}
+
+.nextrlt {
+	--nextrlt-gap: 1rem;
+	--nextrlt-radius: 6px;
+	--nextrlt-bg: transparent;
+	--nextrlt-fg: inherit;
+	--nextrlt-border: rgba( 0, 0, 0, 0.12 );
+	--nextrlt-muted: rgba( 0, 0, 0, 0.6 );
+	--nextrlt-badge-bg: rgba( 0, 0, 0, 0.06 );
+	--nextrlt-badge-fg: inherit;
+	--nextrlt-go: #1f7a3d;
+	--nextrlt-hold: #9a6300;
+	--nextrlt-tbd: #4a4a4a;
+
+	font-size: inherit;
+	color: var( --nextrlt-fg );
+	background: var( --nextrlt-bg );
+	border-radius: var( --nextrlt-radius );
+}
+
+.nextrlt__heading {
+	margin: 0 0 var( --nextrlt-gap );
+}
+
+.nextrlt__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: var( --nextrlt-gap );
+}
+
+.nextrlt__item {
+	margin: 0;
+	padding: var( --nextrlt-gap );
+	border: 1px solid var( --nextrlt-border );
+	border-radius: var( --nextrlt-radius );
+}
+
+.nextrlt__media {
+	margin: calc( var( --nextrlt-gap ) * -1 ) calc( var( --nextrlt-gap ) * -1 ) var( --nextrlt-gap );
+	overflow: hidden;
+	border-radius: var( --nextrlt-radius ) var( --nextrlt-radius ) 0 0;
+}
+
+.nextrlt__image {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+
+.nextrlt__status {
+	display: inline-block;
+	margin-bottom: 0.4em;
+	padding: 0.15em 0.6em;
+	border-radius: 999px;
+	background: var( --nextrlt-badge-bg );
+	color: var( --nextrlt-badge-fg );
+	font-size: 0.75em;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.nextrlt__status--go,
+.nextrlt__status--success {
+	color: var( --nextrlt-go );
+}
+
+.nextrlt__status--hold,
+.nextrlt__status--in-flight {
+	color: var( --nextrlt-hold );
+}
+
+.nextrlt__status--tbd,
+.nextrlt__status--tbc {
+	color: var( --nextrlt-tbd );
+}
+
+.nextrlt__name {
+	margin: 0 0 0.25em;
+	font-size: 1.15em;
+	line-height: 1.25;
+}
+
+.nextrlt__link {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.nextrlt__meta,
+.nextrlt__pad,
+.nextrlt__time {
+	margin: 0 0 0.25em;
+	color: var( --nextrlt-muted );
+	font-size: 0.9em;
+}
+
+.nextrlt__countdown {
+	margin: 0.5em 0;
+	font-variant-numeric: tabular-nums;
+	font-size: 1.05em;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+}
+
+.nextrlt__description {
+	margin: 0.6em 0 0;
+	font-size: 0.92em;
+}
+
+.nextrlt__empty {
+	margin: 0;
+	color: var( --nextrlt-muted );
+}
+
+/* List layout: image beside the text. */
+.nextrlt--list .nextrlt__item {
+	display: grid;
+	grid-template-columns: minmax( 0, 160px ) minmax( 0, 1fr );
+	gap: var( --nextrlt-gap );
+	align-items: start;
+}
+
+.nextrlt--list .nextrlt__media {
+	margin: 0;
+	border-radius: var( --nextrlt-radius );
+}
+
+.nextrlt--list .nextrlt__image {
+	aspect-ratio: 1 / 1;
+}
+
+@media ( max-width: 600px ) {
+	.nextrlt--list .nextrlt__item {
+		grid-template-columns: minmax( 0, 1fr );
+	}
+}
+
+/* Compact layout: a single line of text, no chrome. */
+.nextrlt--compact .nextrlt__item {
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+}
+
+.nextrlt--compact .nextrlt__media {
+	display: none;
+}
+
+.nextrlt--compact .nextrlt__name {
+	font-size: 1em;
+	display: inline;
+}
+
+.nextrlt--compact .nextrlt__countdown {
+	font-size: 1em;
+}
+
+/*
+ * Slider: one launch visible at a time, paged with the prev/next arrows.
+ * nextrlt.js slides .nextrlt__list by setting its transform directly; this stays a
+ * plain stacked list without JS, so nothing traps a visitor on a single item.
+ */
+.nextrlt--slider .nextrlt__viewport {
+	position: relative;
+	overflow: hidden;
+}
+
+.nextrlt--slider .nextrlt__list {
+	display: flex;
+	gap: 0;
+	transition: transform 0.35s ease;
+}
+
+.nextrlt--slider .nextrlt__list > .nextrlt__item {
+	flex: 0 0 100%;
+	min-width: 0;
+	/* Clearance so the overlaid arrows never sit on top of text, regardless
+	   of how much padding the chosen layout gives .nextrlt__item on its own. */
+	padding-left: 2.75rem;
+	padding-right: 2.75rem;
+}
+
+.nextrlt__arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 1;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	transform: translateY( -50% );
+	border: 1px solid var( --nextrlt-border );
+	border-radius: 999px;
+	background: var( --nextrlt-badge-bg );
+	color: inherit;
+	font-size: 1.3rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.nextrlt__arrow--prev {
+	left: 0.5rem;
+}
+
+.nextrlt__arrow--next {
+	right: 0.5rem;
+}
+
+@media ( prefers-color-scheme: dark ) {
+	.nextrlt {
+		--nextrlt-border: rgba( 255, 255, 255, 0.18 );
+		--nextrlt-muted: rgba( 255, 255, 255, 0.65 );
+		--nextrlt-badge-bg: rgba( 255, 255, 255, 0.1 );
+		--nextrlt-go: #6ede93;
+		--nextrlt-hold: #f0c060;
+		--nextrlt-tbd: #b9b9b9;
+	}
+}
+
+/*
+ * Explicit theme="light" / theme="dark", for placing the widget on a surface
+ * that doesn't match the visitor's OS preference. These come after the
+ * prefers-color-scheme block above so an explicit choice always wins.
+ */
+.nextrlt--theme-light {
+	--nextrlt-bg: #ffffff;
+	--nextrlt-fg: #1a1a1a;
+	--nextrlt-border: rgba( 0, 0, 0, 0.12 );
+	--nextrlt-muted: rgba( 0, 0, 0, 0.6 );
+	--nextrlt-badge-bg: rgba( 0, 0, 0, 0.06 );
+	--nextrlt-go: #1f7a3d;
+	--nextrlt-hold: #9a6300;
+	--nextrlt-tbd: #4a4a4a;
+}
+
+.nextrlt--theme-dark {
+	--nextrlt-bg: #1b1e23;
+	--nextrlt-fg: #f5f5f5;
+	--nextrlt-border: rgba( 255, 255, 255, 0.18 );
+	--nextrlt-muted: rgba( 255, 255, 255, 0.65 );
+	--nextrlt-badge-bg: rgba( 255, 255, 255, 0.1 );
+	--nextrlt-go: #6ede93;
+	--nextrlt-hold: #f0c060;
+	--nextrlt-tbd: #b9b9b9;
+}
+
+/*
+ * An explicit theme colors the whole widget as one surface (heading and empty
+ * state included), not just each launch item, so it needs its own padding.
+ */
+.nextrlt--theme-light,
+.nextrlt--theme-dark {
+	padding: var( --nextrlt-gap );
+}

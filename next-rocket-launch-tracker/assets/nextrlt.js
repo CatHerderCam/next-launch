@@ -32,7 +32,7 @@
 	}
 
 	function collectCountdowns() {
-		var nodes = document.querySelectorAll( '[data-sdnl-countdown]' );
+		var nodes = document.querySelectorAll( '[data-nextrlt-countdown]' );
 		var items = [];
 
 		Array.prototype.forEach.call( nodes, function ( node ) {
@@ -48,7 +48,7 @@
 				return;
 			}
 
-			var output = node.querySelector( '.sdnl__countdown-value' ) || node;
+			var output = node.querySelector( '.nextrlt__countdown-value' ) || node;
 
 			items.push( { target: target, output: output } );
 		} );
@@ -57,7 +57,7 @@
 	}
 
 	function localizeTimes() {
-		var nodes = document.querySelectorAll( '[data-sdnl-localtime]' );
+		var nodes = document.querySelectorAll( '[data-nextrlt-localtime]' );
 
 		Array.prototype.forEach.call( nodes, function ( node ) {
 			var raw = node.getAttribute( 'datetime' );
@@ -90,12 +90,12 @@
 	}
 
 	function initSliders() {
-		var widgets = document.querySelectorAll( '.sdnl--slider' );
+		var widgets = document.querySelectorAll( '.nextrlt--slider' );
 
 		Array.prototype.forEach.call( widgets, function ( widget ) {
-			var list = widget.querySelector( '.sdnl__list' );
-			var prev = widget.querySelector( '.sdnl__arrow--prev' );
-			var next = widget.querySelector( '.sdnl__arrow--next' );
+			var list = widget.querySelector( '.nextrlt__list' );
+			var prev = widget.querySelector( '.nextrlt__arrow--prev' );
+			var next = widget.querySelector( '.nextrlt__arrow--next' );
 
 			if ( ! list || ! prev || ! next || ! list.children.length ) {
 				return;

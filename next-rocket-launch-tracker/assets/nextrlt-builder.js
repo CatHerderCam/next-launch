@@ -1,7 +1,7 @@
 /**
  * Next Rocket Launch Tracker shortcode builder.
  *
- * Reads the form fields on the builder screen, assembles a [next_launch]
+ * Reads the form fields on the builder screen, assembles a [nextrlt_next_launch]
  * shortcode string, and offers a one-click copy. Every field is optional;
  * an attribute is only written out when it differs from doing nothing
  * (kept blank/default), so the generated shortcode stays short.
@@ -10,15 +10,15 @@
 	'use strict';
 
 	document.addEventListener( 'DOMContentLoaded', function () {
-		var form   = document.querySelector( '.sdnl-builder__form' );
-		var output = document.getElementById( 'sdnl-b-output' );
+		var form   = document.querySelector( '.nextrlt-builder__form' );
+		var output = document.getElementById( 'nextrlt-b-output' );
 
 		if ( ! form || ! output ) {
 			return;
 		}
 
-		var toggles = form.querySelectorAll( '[data-sdnl-toggle]' );
-		var fields  = form.querySelectorAll( '[data-sdnl-field]' );
+		var toggles = form.querySelectorAll( '[data-nextrlt-toggle]' );
+		var fields  = form.querySelectorAll( '[data-nextrlt-field]' );
 
 		// Selects start on a real option (e.g. "card"), unlike text inputs which
 		// start blank, so a select needs its own initial value to compare against.
@@ -38,7 +38,7 @@
 			var parts = [];
 
 			fields.forEach( function ( field ) {
-				var name  = field.getAttribute( 'data-sdnl-field' );
+				var name  = field.getAttribute( 'data-nextrlt-field' );
 				var value;
 
 				if ( field.multiple ) {
@@ -61,7 +61,7 @@
 			} );
 
 			toggles.forEach( function ( toggle ) {
-				var name    = toggle.getAttribute( 'data-sdnl-toggle' );
+				var name    = toggle.getAttribute( 'data-nextrlt-toggle' );
 				var checked = toggle.checked;
 				var isDefault = toggle.defaultChecked;
 
@@ -72,7 +72,7 @@
 				parts.push( name + '="' + ( checked ? 'yes' : 'no' ) + '"' );
 			} );
 
-			output.value = parts.length ? '[next_launch ' + parts.join( ' ' ) + ']' : '[next_launch]';
+			output.value = parts.length ? '[nextrlt_next_launch ' + parts.join( ' ' ) + ']' : '[nextrlt_next_launch]';
 		}
 
 		fields.forEach( function ( field ) {
@@ -86,9 +86,9 @@
 
 		build();
 
-		var copyButton = document.getElementById( 'sdnl-b-copy' );
-		var copyStatus = document.getElementById( 'sdnl-b-copy-status' );
-		var strings    = ( window.sdnlBuilder && window.sdnlBuilder.strings ) || {};
+		var copyButton = document.getElementById( 'nextrlt-b-copy' );
+		var copyStatus = document.getElementById( 'nextrlt-b-copy-status' );
+		var strings    = ( window.nextrltBuilder && window.nextrltBuilder.strings ) || {};
 
 		if ( copyButton ) {
 			copyButton.addEventListener( 'click', function () {
@@ -118,10 +118,10 @@
 
 		// Location picker: a multi-select kept in sync with the launch-site API,
 		// pre-populated with the most active sites and refined by the search box.
-		var searchInput    = document.getElementById( 'sdnl-b-loc-search' );
-		var locationSelect = document.getElementById( 'sdnl-b-location' );
+		var searchInput    = document.getElementById( 'nextrlt-b-loc-search' );
+		var locationSelect = document.getElementById( 'nextrlt-b-location' );
 
-		if ( ! searchInput || ! locationSelect || ! window.sdnlBuilder ) {
+		if ( ! searchInput || ! locationSelect || ! window.nextrltBuilder ) {
 			return;
 		}
 
@@ -181,13 +181,13 @@
 
 			var body = new URLSearchParams();
 			body.append( 'action', action );
-			body.append( 'nonce', window.sdnlBuilder.nonce );
+			body.append( 'nonce', window.nextrltBuilder.nonce );
 
 			if ( term ) {
 				body.append( 'term', term );
 			}
 
-			fetch( window.sdnlBuilder.ajaxUrl, {
+			fetch( window.nextrltBuilder.ajaxUrl, {
 				method: 'POST',
 				credentials: 'same-origin',
 				body: body
@@ -216,10 +216,10 @@
 			searchTimer = window.setTimeout( function () {
 				var term = searchInput.value.trim();
 
-				fetchLocations( term ? 'sdnl_search_locations' : 'sdnl_popular_locations', term );
+				fetchLocations( term ? 'nextrlt_search_locations' : 'nextrlt_popular_locations', term );
 			}, 300 );
 		} );
 
-		fetchLocations( 'sdnl_popular_locations' );
+		fetchLocations( 'nextrlt_popular_locations' );
 	} );
 } )();

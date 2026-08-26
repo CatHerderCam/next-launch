@@ -5,14 +5,17 @@
  * Visitors always read from cache. This job repopulates it in the background so
  * nobody waits on an HTTP request to an external API during a page load.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Cron {
+/**
+ * Background cache refresh.
+ */
+class NEXTRLT_Cron {
 
-	const HOOK = 'sdnl_refresh_cache';
+	const HOOK = 'nextrlt_refresh_cache';
 
 	/**
 	 * The free API tier is rate limited. Never refresh more than this many
@@ -52,7 +55,7 @@ class SDNL_Cron {
 	 * Refresh the most recently used queries.
 	 */
 	public static function run() {
-		$registry = SDNL_API::get_registry();
+		$registry = NEXTRLT_API::get_registry();
 
 		if ( empty( $registry ) ) {
 			return;
@@ -78,9 +81,9 @@ class SDNL_Cron {
 			$locations = isset( $entry['locations'] ) ? $entry['locations'] : '';
 			$limit     = isset( $entry['limit'] ) ? (int) $entry['limit'] : 1;
 
-			SDNL_API::get_upcoming( $locations, $limit, true );
+			NEXTRLT_API::get_upcoming( $locations, $limit, true );
 
-			$done++;
+			++$done;
 
 			// Be a polite API consumer.
 			if ( $done < self::MAX_PER_RUN ) {

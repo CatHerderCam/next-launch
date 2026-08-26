@@ -1,18 +1,21 @@
 <?php
 /**
- * Elementor widget. Only ever loaded from SDNL_Elementor::register_widget(),
+ * Elementor widget. Only ever loaded from NEXTRLT_Elementor::register_widget(),
  * which is itself only called by Elementor, so \Elementor\* is guaranteed to
  * be available here.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
+/**
+ * Elementor widget exposing the same options as the shortcode.
+ */
+class NEXTRLT_Elementor_Widget extends \Elementor\Widget_Base {
 
 	/**
-	 * Toggle controls mirrored from SDNL_Shortcode, mapped to their default
+	 * Toggle controls mirrored from NEXTRLT_Shortcode, mapped to their default
 	 * (on/off) state.
 	 *
 	 * @return array
@@ -29,22 +32,47 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		);
 	}
 
+	/**
+	 * Unique widget identifier.
+	 *
+	 * @return string
+	 */
 	public function get_name() {
-		return 'next_launch';
+		return 'nextrlt_next_launch';
 	}
 
+	/**
+	 * Widget panel display title.
+	 *
+	 * @return string
+	 */
 	public function get_title() {
 		return __( 'Next Rocket Launch Tracker', 'next-rocket-launch-tracker' );
 	}
 
+	/**
+	 * Widget panel icon.
+	 *
+	 * @return string
+	 */
 	public function get_icon() {
 		return 'eicon-countdown';
 	}
 
+	/**
+	 * Elementor category this widget appears under.
+	 *
+	 * @return string[]
+	 */
 	public function get_categories() {
 		return array( 'next-rocket-launch-tracker' );
 	}
 
+	/**
+	 * Search keywords for the widget panel.
+	 *
+	 * @return string[]
+	 */
 	public function get_keywords() {
 		return array( 'rocket', 'launch', 'spacex', 'countdown', 'space' );
 	}
@@ -52,25 +80,30 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 	/**
 	 * Elementor renders widget updates (e.g. after a settings change) through
 	 * an isolated AJAX fragment with no wp_head(), so the wp_enqueue_style()
-	 * call inside SDNL_Shortcode::render() has nowhere to print. Declaring the
+	 * call inside NEXTRLT_Shortcode::render() has nowhere to print. Declaring the
 	 * dependency here instead makes Elementor load it for that fragment too.
 	 *
 	 * @return string[]
 	 */
 	public function get_style_depends() {
-		return SDNL_Settings::get( 'load_css' ) ? array( 'sdnl' ) : array();
+		return NEXTRLT_Settings::get( 'load_css' ) ? array( 'nextrlt' ) : array();
 	}
 
 	/**
+	 * Script handles this widget depends on.
+	 *
 	 * @return string[]
 	 */
 	public function get_script_depends() {
-		return array( 'sdnl' );
+		return array( 'nextrlt' );
 	}
 
+	/**
+	 * Register the widget's Elementor controls.
+	 */
 	protected function register_controls() {
 		$this->start_controls_section(
-			'sdnl_section_content',
+			'nextrlt_section_content',
 			array(
 				'label' => __( 'Content', 'next-rocket-launch-tracker' ),
 			)
@@ -91,7 +124,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 			array(
 				'label'       => __( 'Locations', 'next-rocket-launch-tracker' ),
 				'type'        => \Elementor\Controls_Manager::TEXT,
-				'default'     => SDNL_Settings::get( 'default_locations' ),
+				'default'     => NEXTRLT_Settings::get( 'default_locations' ),
 				'placeholder' => '12,27',
 				'description' => __( 'Comma separated launch location IDs. Leave empty to show launches from anywhere. Find IDs on Settings > Next Rocket Launch Tracker.', 'next-rocket-launch-tracker' ),
 			)
@@ -105,7 +138,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 				'min'     => 1,
 				'max'     => 10,
 				'step'    => 1,
-				'default' => SDNL_Settings::get( 'default_limit' ),
+				'default' => NEXTRLT_Settings::get( 'default_limit' ),
 			)
 		);
 
@@ -188,7 +221,7 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'sdnl_section_fields',
+			'nextrlt_section_fields',
 			array(
 				'label' => __( 'Fields to show', 'next-rocket-launch-tracker' ),
 			)
@@ -213,6 +246,9 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 	}
 
+	/**
+	 * Render the widget on the front end.
+	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
 
@@ -232,6 +268,6 @@ class SDNL_Elementor_Widget extends \Elementor\Widget_Base {
 			$atts[ $key ] = ! empty( $settings[ $key ] ) ? 'yes' : 'no';
 		}
 
-		echo SDNL_Shortcode::render( $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SDNL_Shortcode::render() escapes its own output.
+		echo NEXTRLT_Shortcode::render( $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- NEXTRLT_Shortcode::render() escapes its own output.
 	}
 }

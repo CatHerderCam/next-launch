@@ -2,12 +2,15 @@
 /**
  * Elementor integration.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Elementor {
+/**
+ * Elementor integration.
+ */
+class NEXTRLT_Elementor {
 
 	/**
 	 * Hook Elementor. Both hooks only ever fire when Elementor itself is
@@ -40,8 +43,8 @@ class SDNL_Elementor {
 	 * @param object $widgets_manager Elementor's Widgets_Manager instance.
 	 */
 	public static function register_widget( $widgets_manager ) {
-		require_once SDNL_PATH . 'includes/class-sdnl-elementor-widget.php';
+		require_once NEXTRLT_PATH . 'includes/class-nextrlt-elementor-widget.php';
 
-		$widgets_manager->register( new SDNL_Elementor_Widget() );
+		$widgets_manager->register( new NEXTRLT_Elementor_Widget() );
 	}
 }

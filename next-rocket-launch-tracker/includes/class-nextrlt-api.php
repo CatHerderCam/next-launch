@@ -6,18 +6,21 @@
  * limited, the last good response is served instead so the widget never
  * collapses to an empty box on a client site.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_API {
+/**
+ * Launch Library 2 API client.
+ */
+class NEXTRLT_API {
 
 	const BASE_PROD      = 'https://ll.thespacedevs.com/2.2.0/';
 	const BASE_DEV       = 'https://lldev.thespacedevs.com/2.2.0/';
-	const REGISTRY       = 'sdnl_query_registry';
-	const STALE_STORE    = 'sdnl_stale_store';
-	const LOCATION_CACHE = 'sdnl_locations_';
+	const REGISTRY       = 'nextrlt_query_registry';
+	const STALE_STORE    = 'nextrlt_stale_store';
+	const LOCATION_CACHE = 'nextrlt_locations_';
 	const MAX_STALE      = 20;
 
 	/**
@@ -26,7 +29,7 @@ class SDNL_API {
 	 * @return string
 	 */
 	public static function base() {
-		return SDNL_Settings::get( 'use_dev_endpoint' ) ? self::BASE_DEV : self::BASE_PROD;
+		return NEXTRLT_Settings::get( 'use_dev_endpoint' ) ? self::BASE_DEV : self::BASE_PROD;
 	}
 
 	/**
@@ -59,7 +62,7 @@ class SDNL_API {
 	 * @return string
 	 */
 	protected static function cache_key( $locations, $limit ) {
-		return 'sdnl_' . md5( self::base() . '|' . $locations . '|' . $limit );
+		return 'nextrlt_' . md5( self::base() . '|' . $locations . '|' . $limit );
 	}
 
 	/**
@@ -73,7 +76,7 @@ class SDNL_API {
 	public static function get_upcoming( $locations, $limit, $force = false ) {
 		$locations = self::sanitize_id_list( $locations );
 		$limit     = max( 1, min( 10, absint( $limit ) ) );
-		$ttl       = absint( SDNL_Settings::get( 'cache_ttl' ) );
+		$ttl       = absint( NEXTRLT_Settings::get( 'cache_ttl' ) );
 		$key       = self::cache_key( $locations, $limit );
 
 		self::register_query( $key, $locations, $limit );
@@ -89,7 +92,7 @@ class SDNL_API {
 		// Back off after a failure so a broken API does not mean a request on
 		// every single page view.
 		if ( ! $force && get_transient( $key . '_fail' ) ) {
-			return self::stale( $key, new WP_Error( 'sdnl_backoff', __( 'Waiting before retrying the launch API.', 'next-rocket-launch-tracker' ) ) );
+			return self::stale( $key, new WP_Error( 'nextrlt_backoff', __( 'Waiting before retrying the launch API.', 'next-rocket-launch-tracker' ) ) );
 		}
 
 		$args = array(
@@ -129,7 +132,7 @@ class SDNL_API {
 
 			return self::stale(
 				$key,
-				new WP_Error( 'sdnl_rate_limited', __( 'The launch API rate limit was reached.', 'next-rocket-launch-tracker' ) )
+				new WP_Error( 'nextrlt_rate_limited', __( 'The launch API rate limit was reached.', 'next-rocket-launch-tracker' ) )
 			);
 		}
 
@@ -139,7 +142,7 @@ class SDNL_API {
 			return self::stale(
 				$key,
 				new WP_Error(
-					'sdnl_http_error',
+					'nextrlt_http_error',
 					sprintf(
 						/* translators: %d: HTTP status code. */
 						__( 'The launch API returned status %d.', 'next-rocket-launch-tracker' ),
@@ -156,7 +159,7 @@ class SDNL_API {
 
 			return self::stale(
 				$key,
-				new WP_Error( 'sdnl_bad_payload', __( 'The launch API response could not be read.', 'next-rocket-launch-tracker' ) )
+				new WP_Error( 'nextrlt_bad_payload', __( 'The launch API response could not be read.', 'next-rocket-launch-tracker' ) )
 			);
 		}
 
@@ -201,43 +204,43 @@ class SDNL_API {
 	 * @return array
 	 */
 	protected static function shape( $r ) {
-		$get = static function ( $arr, $path, $default = '' ) {
+		$get = static function ( $arr, $path, $fallback = '' ) {
 			$node = $arr;
 
 			foreach ( explode( '.', $path ) as $segment ) {
 				if ( ! is_array( $node ) || ! isset( $node[ $segment ] ) ) {
-					return $default;
+					return $fallback;
 				}
 
 				$node = $node[ $segment ];
 			}
 
-			return ( null === $node || '' === $node ) ? $default : $node;
+			return ( null === $node || '' === $node ) ? $fallback : $node;
 		};
 
 		return array(
-			'id'          => (string) $get( $r, 'id' ),
-			'name'        => (string) $get( $r, 'name' ),
-			'net'         => (string) $get( $r, 'net' ),
-			'window_start'=> (string) $get( $r, 'window_start' ),
-			'window_end'  => (string) $get( $r, 'window_end' ),
-			'status'      => (string) $get( $r, 'status.name' ),
-			'status_abbr' => (string) $get( $r, 'status.abbrev' ),
-			'status_desc' => (string) $get( $r, 'status.description' ),
-			'probability' => $get( $r, 'probability', null ),
-			'provider'    => (string) $get( $r, 'launch_service_provider.name' ),
-			'rocket'      => (string) $get( $r, 'rocket.configuration.full_name', $get( $r, 'rocket.configuration.name' ) ),
-			'mission'     => (string) $get( $r, 'mission.name' ),
-			'mission_desc'=> (string) $get( $r, 'mission.description' ),
-			'orbit'       => (string) $get( $r, 'mission.orbit.name' ),
-			'pad'         => (string) $get( $r, 'pad.name' ),
-			'pad_map'     => (string) $get( $r, 'pad.map_url' ),
-			'location'    => (string) $get( $r, 'pad.location.name' ),
-			'location_id' => (int) $get( $r, 'pad.location.id', 0 ),
-			'image'       => (string) $get( $r, 'image' ),
-			'webcast'     => (bool) $get( $r, 'webcast_live', false ),
-			'url'         => (string) $get( $r, 'url' ),
-			'slug'        => (string) $get( $r, 'slug' ),
+			'id'           => (string) $get( $r, 'id' ),
+			'name'         => (string) $get( $r, 'name' ),
+			'net'          => (string) $get( $r, 'net' ),
+			'window_start' => (string) $get( $r, 'window_start' ),
+			'window_end'   => (string) $get( $r, 'window_end' ),
+			'status'       => (string) $get( $r, 'status.name' ),
+			'status_abbr'  => (string) $get( $r, 'status.abbrev' ),
+			'status_desc'  => (string) $get( $r, 'status.description' ),
+			'probability'  => $get( $r, 'probability', null ),
+			'provider'     => (string) $get( $r, 'launch_service_provider.name' ),
+			'rocket'       => (string) $get( $r, 'rocket.configuration.full_name', $get( $r, 'rocket.configuration.name' ) ),
+			'mission'      => (string) $get( $r, 'mission.name' ),
+			'mission_desc' => (string) $get( $r, 'mission.description' ),
+			'orbit'        => (string) $get( $r, 'mission.orbit.name' ),
+			'pad'          => (string) $get( $r, 'pad.name' ),
+			'pad_map'      => (string) $get( $r, 'pad.map_url' ),
+			'location'     => (string) $get( $r, 'pad.location.name' ),
+			'location_id'  => (int) $get( $r, 'pad.location.id', 0 ),
+			'image'        => (string) $get( $r, 'image' ),
+			'webcast'      => (bool) $get( $r, 'webcast_live', false ),
+			'url'          => (string) $get( $r, 'url' ),
+			'slug'         => (string) $get( $r, 'slug' ),
 		);
 	}
 
@@ -313,7 +316,7 @@ class SDNL_API {
 
 		if ( 200 !== $code ) {
 			return new WP_Error(
-				'sdnl_http_error',
+				'nextrlt_http_error',
 				sprintf(
 					/* translators: %d: HTTP status code. */
 					__( 'The launch API returned status %d.', 'next-rocket-launch-tracker' ),
@@ -325,7 +328,7 @@ class SDNL_API {
 		$body = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( ! is_array( $body ) || ! isset( $body['results'] ) || ! is_array( $body['results'] ) ) {
-			return new WP_Error( 'sdnl_bad_payload', __( 'The location list could not be read.', 'next-rocket-launch-tracker' ) );
+			return new WP_Error( 'nextrlt_bad_payload', __( 'The location list could not be read.', 'next-rocket-launch-tracker' ) );
 		}
 
 		$locations = array();

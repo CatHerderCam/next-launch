@@ -2,14 +2,17 @@
 /**
  * Settings screen.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Admin {
+/**
+ * Settings screen.
+ */
+class NEXTRLT_Admin {
 
-	const PAGE = 'sdnl-settings';
+	const PAGE = 'nextrlt-settings';
 
 	/**
 	 * Hook the admin screens.
@@ -17,8 +20,45 @@ class SDNL_Admin {
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'add_page' ) );
 		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
-		add_action( 'admin_post_sdnl_flush_cache', array( __CLASS__, 'handle_flush' ) );
-		add_action( 'wp_ajax_sdnl_search_locations', array( __CLASS__, 'ajax_search_locations' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue' ) );
+		add_action( 'admin_post_nextrlt_flush_cache', array( __CLASS__, 'handle_flush' ) );
+		add_action( 'wp_ajax_nextrlt_search_locations', array( __CLASS__, 'ajax_search_locations' ) );
+	}
+
+	/**
+	 * Enqueue the settings screen's own assets, only on its screen.
+	 *
+	 * @param string $hook Current admin page hook.
+	 */
+	public static function enqueue( $hook ) {
+		if ( 'settings_page_' . self::PAGE !== $hook ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'nextrlt-admin',
+			NEXTRLT_URL . 'assets/nextrlt-admin.js',
+			array(),
+			NEXTRLT_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'nextrlt-admin',
+			'nextrltAdmin',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'nextrlt_locations' ),
+				'strings' => array(
+					'searching'  => __( 'Searching…', 'next-rocket-launch-tracker' ),
+					'failed'     => __( 'Search failed.', 'next-rocket-launch-tracker' ),
+					'noResults'  => __( 'No matching launch sites.', 'next-rocket-launch-tracker' ),
+					'id'         => __( 'ID', 'next-rocket-launch-tracker' ),
+					'launchSite' => __( 'Launch site', 'next-rocket-launch-tracker' ),
+					'country'    => __( 'Country', 'next-rocket-launch-tracker' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -39,12 +79,12 @@ class SDNL_Admin {
 	 */
 	public static function register_settings() {
 		register_setting(
-			'sdnl_settings_group',
-			SDNL_Settings::OPTION,
+			'nextrlt_settings_group',
+			NEXTRLT_Settings::OPTION,
 			array(
 				'type'              => 'array',
-				'sanitize_callback' => array( 'SDNL_Settings', 'sanitize' ),
-				'default'           => SDNL_Settings::defaults(),
+				'sanitize_callback' => array( 'NEXTRLT_Settings', 'sanitize' ),
+				'default'           => NEXTRLT_Settings::defaults(),
 			)
 		);
 	}
@@ -57,9 +97,9 @@ class SDNL_Admin {
 			wp_die( esc_html__( 'You do not have permission to do that.', 'next-rocket-launch-tracker' ) );
 		}
 
-		check_admin_referer( 'sdnl_flush_cache' );
+		check_admin_referer( 'nextrlt_flush_cache' );
 
-		SDNL_API::flush_cache();
+		NEXTRLT_API::flush_cache();
 
 		wp_safe_redirect(
 			add_query_arg(
@@ -82,10 +122,10 @@ class SDNL_Admin {
 			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'next-rocket-launch-tracker' ) ), 403 );
 		}
 
-		check_ajax_referer( 'sdnl_locations', 'nonce' );
+		check_ajax_referer( 'nextrlt_locations', 'nonce' );
 
 		$term    = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
-		$results = SDNL_API::search_locations( $term );
+		$results = NEXTRLT_API::search_locations( $term );
 
 		if ( is_wp_error( $results ) ) {
 			wp_send_json_error( array( 'message' => $results->get_error_message() ) );
@@ -102,7 +142,7 @@ class SDNL_Admin {
 			return;
 		}
 
-		$settings = SDNL_Settings::get_all();
+		$settings = NEXTRLT_Settings::get_all();
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only notice flag.
 		$flushed = isset( $_GET['flushed'] ) && '1' === sanitize_text_field( wp_unslash( $_GET['flushed'] ) );
 		?>
@@ -116,19 +156,19 @@ class SDNL_Admin {
 			<?php endif; ?>
 
 			<form method="post" action="options.php">
-				<?php settings_fields( 'sdnl_settings_group' ); ?>
+				<?php settings_fields( 'nextrlt_settings_group' ); ?>
 
 				<table class="form-table" role="presentation">
 					<tr>
 						<th scope="row">
-							<label for="sdnl-locations"><?php esc_html_e( 'Default locations', 'next-rocket-launch-tracker' ); ?></label>
+							<label for="nextrlt-locations"><?php esc_html_e( 'Default locations', 'next-rocket-launch-tracker' ); ?></label>
 						</th>
 						<td>
 							<input
 								type="text"
-								id="sdnl-locations"
+								id="nextrlt-locations"
 								class="regular-text"
-								name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[default_locations]"
+								name="<?php echo esc_attr( NEXTRLT_Settings::OPTION ); ?>[default_locations]"
 								value="<?php echo esc_attr( $settings['default_locations'] ); ?>" />
 							<p class="description">
 								<?php esc_html_e( 'Comma separated location IDs. Leave empty to show launches from anywhere. Use the search below to find IDs.', 'next-rocket-launch-tracker' ); ?>
@@ -137,29 +177,29 @@ class SDNL_Admin {
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="sdnl-limit"><?php esc_html_e( 'Default number of launches', 'next-rocket-launch-tracker' ); ?></label>
+							<label for="nextrlt-limit"><?php esc_html_e( 'Default number of launches', 'next-rocket-launch-tracker' ); ?></label>
 						</th>
 						<td>
 							<input
 								type="number"
-								id="sdnl-limit"
+								id="nextrlt-limit"
 								min="1"
 								max="10"
-								name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[default_limit]"
+								name="<?php echo esc_attr( NEXTRLT_Settings::OPTION ); ?>[default_limit]"
 								value="<?php echo esc_attr( $settings['default_limit'] ); ?>" />
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<label for="sdnl-ttl"><?php esc_html_e( 'Cache lifetime', 'next-rocket-launch-tracker' ); ?></label>
+							<label for="nextrlt-ttl"><?php esc_html_e( 'Cache lifetime', 'next-rocket-launch-tracker' ); ?></label>
 						</th>
 						<td>
 							<input
 								type="number"
-								id="sdnl-ttl"
+								id="nextrlt-ttl"
 								min="300"
 								step="60"
-								name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[cache_ttl]"
+								name="<?php echo esc_attr( NEXTRLT_Settings::OPTION ); ?>[cache_ttl]"
 								value="<?php echo esc_attr( $settings['cache_ttl'] ); ?>" />
 							<?php esc_html_e( 'seconds', 'next-rocket-launch-tracker' ); ?>
 							<p class="description">
@@ -174,7 +214,7 @@ class SDNL_Admin {
 								<input
 									type="checkbox"
 									value="1"
-									name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[use_dev_endpoint]"
+									name="<?php echo esc_attr( NEXTRLT_Settings::OPTION ); ?>[use_dev_endpoint]"
 									<?php checked( $settings['use_dev_endpoint'], 1 ); ?> />
 								<?php esc_html_e( 'Use lldev.thespacedevs.com instead of the production API', 'next-rocket-launch-tracker' ); ?>
 							</label>
@@ -190,7 +230,7 @@ class SDNL_Admin {
 								<input
 									type="checkbox"
 									value="1"
-									name="<?php echo esc_attr( SDNL_Settings::OPTION ); ?>[load_css]"
+									name="<?php echo esc_attr( NEXTRLT_Settings::OPTION ); ?>[load_css]"
 									<?php checked( $settings['load_css'], 1 ); ?> />
 								<?php esc_html_e( 'Load the bundled stylesheet', 'next-rocket-launch-tracker' ); ?>
 							</label>
@@ -210,17 +250,17 @@ class SDNL_Admin {
 			<p><?php esc_html_e( 'Search the API for a launch site, then copy its ID into the field above or into a shortcode.', 'next-rocket-launch-tracker' ); ?></p>
 
 			<p>
-				<input type="search" id="sdnl-loc-search" class="regular-text" placeholder="<?php esc_attr_e( 'Cape Canaveral', 'next-rocket-launch-tracker' ); ?>" />
-				<button type="button" class="button" id="sdnl-loc-go"><?php esc_html_e( 'Search', 'next-rocket-launch-tracker' ); ?></button>
+				<input type="search" id="nextrlt-loc-search" class="regular-text" placeholder="<?php esc_attr_e( 'Cape Canaveral', 'next-rocket-launch-tracker' ); ?>" />
+				<button type="button" class="button" id="nextrlt-loc-go"><?php esc_html_e( 'Search', 'next-rocket-launch-tracker' ); ?></button>
 			</p>
 
-			<div id="sdnl-loc-results"></div>
+			<div id="nextrlt-loc-results"></div>
 
 			<hr />
 
 			<h2><?php esc_html_e( 'Shortcode', 'next-rocket-launch-tracker' ); ?></h2>
-			<p><code>[next_launch]</code> <?php esc_html_e( 'uses the defaults above. Every default can be overridden per shortcode:', 'next-rocket-launch-tracker' ); ?></p>
-			<p><code>[next_launch location="12,27" limit="3" layout="list" countdown="yes" image="no"]</code></p>
+			<p><code>[nextrlt_next_launch]</code> <?php esc_html_e( 'uses the defaults above. Every default can be overridden per shortcode:', 'next-rocket-launch-tracker' ); ?></p>
+			<p><code>[nextrlt_next_launch location="12,27" limit="3" layout="list" countdown="yes" image="no"]</code></p>
 
 			<table class="widefat striped" style="max-width:820px">
 				<thead>
@@ -269,7 +309,7 @@ class SDNL_Admin {
 			<h2><?php esc_html_e( 'Cache', 'next-rocket-launch-tracker' ); ?></h2>
 			<p>
 				<?php
-				$next = wp_next_scheduled( SDNL_Cron::HOOK );
+				$next = wp_next_scheduled( NEXTRLT_Cron::HOOK );
 
 				if ( $next ) {
 					printf(
@@ -284,8 +324,8 @@ class SDNL_Admin {
 			</p>
 
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="sdnl_flush_cache" />
-				<?php wp_nonce_field( 'sdnl_flush_cache' ); ?>
+				<input type="hidden" name="action" value="nextrlt_flush_cache" />
+				<?php wp_nonce_field( 'nextrlt_flush_cache' ); ?>
 				<?php submit_button( __( 'Clear cached launch data', 'next-rocket-launch-tracker' ), 'secondary', 'submit', false ); ?>
 			</form>
 
@@ -299,90 +339,6 @@ class SDNL_Admin {
 				?>
 			</p>
 		</div>
-
-		<script>
-		( function () {
-			var input   = document.getElementById( 'sdnl-loc-search' );
-			var button  = document.getElementById( 'sdnl-loc-go' );
-			var results = document.getElementById( 'sdnl-loc-results' );
-
-			if ( ! input || ! button || ! results ) {
-				return;
-			}
-
-			var ajaxUrl = <?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>;
-			var nonce   = <?php echo wp_json_encode( wp_create_nonce( 'sdnl_locations' ) ); ?>;
-
-			function escapeHtml( value ) {
-				var div = document.createElement( 'div' );
-				div.appendChild( document.createTextNode( String( value ) ) );
-				return div.innerHTML;
-			}
-
-			function search() {
-				var term = input.value.trim();
-
-				if ( ! term ) {
-					return;
-				}
-
-				results.textContent = <?php echo wp_json_encode( __( 'Searching…', 'next-rocket-launch-tracker' ) ); ?>;
-
-				var body = new URLSearchParams();
-				body.append( 'action', 'sdnl_search_locations' );
-				body.append( 'nonce', nonce );
-				body.append( 'term', term );
-
-				fetch( ajaxUrl, {
-					method: 'POST',
-					credentials: 'same-origin',
-					body: body
-				} ).then( function ( response ) {
-					return response.json();
-				} ).then( function ( payload ) {
-					if ( ! payload || ! payload.success ) {
-						results.textContent = ( payload && payload.data && payload.data.message )
-							? payload.data.message
-							: <?php echo wp_json_encode( __( 'Search failed.', 'next-rocket-launch-tracker' ) ); ?>;
-						return;
-					}
-
-					var list = payload.data.locations || [];
-
-					if ( ! list.length ) {
-						results.textContent = <?php echo wp_json_encode( __( 'No matching launch sites.', 'next-rocket-launch-tracker' ) ); ?>;
-						return;
-					}
-
-					var html = '<table class="widefat striped" style="max-width:640px"><thead><tr>' +
-						'<th style="width:80px"><?php echo esc_js( __( 'ID', 'next-rocket-launch-tracker' ) ); ?></th>' +
-						'<th><?php echo esc_js( __( 'Launch site', 'next-rocket-launch-tracker' ) ); ?></th>' +
-						'<th style="width:90px"><?php echo esc_js( __( 'Country', 'next-rocket-launch-tracker' ) ); ?></th>' +
-						'</tr></thead><tbody>';
-
-					list.forEach( function ( item ) {
-						html += '<tr><td><code>' + escapeHtml( item.id ) + '</code></td><td>' +
-							escapeHtml( item.name ) + '</td><td>' +
-							escapeHtml( item.country ) + '</td></tr>';
-					} );
-
-					html += '</tbody></table>';
-					results.innerHTML = html;
-				} ).catch( function () {
-					results.textContent = <?php echo wp_json_encode( __( 'Search failed.', 'next-rocket-launch-tracker' ) ); ?>;
-				} );
-			}
-
-			button.addEventListener( 'click', search );
-
-			input.addEventListener( 'keydown', function ( event ) {
-				if ( 'Enter' === event.key ) {
-					event.preventDefault();
-					search();
-				}
-			} );
-		} )();
-		</script>
 		<?php
 	}
 }

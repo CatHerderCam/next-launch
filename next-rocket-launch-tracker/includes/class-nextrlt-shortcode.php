@@ -2,18 +2,21 @@
 /**
  * Front-end shortcode.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Shortcode {
+/**
+ * Front-end shortcode.
+ */
+class NEXTRLT_Shortcode {
 
 	/**
 	 * Hook the shortcode.
 	 */
 	public static function init() {
-		add_shortcode( 'next_launch', array( __CLASS__, 'render' ) );
+		add_shortcode( 'nextrlt_next_launch', array( __CLASS__, 'render' ) );
 	}
 
 	/**
@@ -38,8 +41,8 @@ class SDNL_Shortcode {
 	 */
 	public static function render( $atts ) {
 		$defaults = array(
-			'location'    => SDNL_Settings::get( 'default_locations' ),
-			'limit'       => SDNL_Settings::get( 'default_limit' ),
+			'location'    => NEXTRLT_Settings::get( 'default_locations' ),
+			'limit'       => NEXTRLT_Settings::get( 'default_limit' ),
 			'layout'      => 'card',
 			'theme'       => 'auto',
 			'slider'      => 'no',
@@ -59,33 +62,33 @@ class SDNL_Shortcode {
 			'class'       => '',
 		);
 
-		$atts = shortcode_atts( $defaults, $atts, 'next_launch' );
+		$atts = shortcode_atts( $defaults, $atts, 'nextrlt_next_launch' );
 
-		$locations = SDNL_API::sanitize_id_list( $atts['location'] );
+		$locations = NEXTRLT_API::sanitize_id_list( $atts['location'] );
 		$limit     = max( 1, min( 10, absint( $atts['limit'] ) ) );
 		$layout    = in_array( $atts['layout'], array( 'card', 'list', 'compact' ), true ) ? $atts['layout'] : 'card';
 		$theme     = in_array( $atts['theme'], array( 'auto', 'light', 'dark' ), true ) ? $atts['theme'] : 'auto';
 		$tz_mode   = in_array( $atts['timezone'], array( 'site', 'viewer', 'utc' ), true ) ? $atts['timezone'] : 'site';
 
-		$launches = SDNL_API::get_upcoming( $locations, $limit );
+		$launches = NEXTRLT_API::get_upcoming( $locations, $limit );
 		$slider   = self::is_true( $atts['slider'] ) && is_array( $launches ) && count( $launches ) > 1;
 
-		if ( SDNL_Settings::get( 'load_css' ) ) {
-			wp_enqueue_style( 'sdnl' );
+		if ( NEXTRLT_Settings::get( 'load_css' ) ) {
+			wp_enqueue_style( 'nextrlt' );
 		}
 
 		if ( self::is_true( $atts['countdown'] ) || 'viewer' === $tz_mode || $slider ) {
-			wp_enqueue_script( 'sdnl' );
+			wp_enqueue_script( 'nextrlt' );
 		}
 
-		$classes = array( 'sdnl', 'sdnl--' . $layout );
+		$classes = array( 'nextrlt', 'nextrlt--' . $layout );
 
 		if ( 'auto' !== $theme ) {
-			$classes[] = 'sdnl--theme-' . $theme;
+			$classes[] = 'nextrlt--theme-' . $theme;
 		}
 
 		if ( $slider ) {
-			$classes[] = 'sdnl--slider';
+			$classes[] = 'nextrlt--slider';
 		}
 
 		if ( '' !== trim( $atts['class'] ) ) {
@@ -97,7 +100,7 @@ class SDNL_Shortcode {
 		echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 
 		if ( '' !== trim( $atts['title'] ) ) {
-			echo '<h3 class="sdnl__heading">' . esc_html( $atts['title'] ) . '</h3>';
+			echo '<h3 class="nextrlt__heading">' . esc_html( $atts['title'] ) . '</h3>';
 		}
 
 		if ( is_wp_error( $launches ) ) {
@@ -107,28 +110,28 @@ class SDNL_Shortcode {
 				error_log( 'Next Rocket Launch Tracker: ' . $launches->get_error_message() ); // phpcs:ignore
 			}
 
-			echo '<p class="sdnl__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
+			echo '<p class="nextrlt__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
 			echo '</div>';
 
 			return ob_get_clean();
 		}
 
 		if ( empty( $launches ) ) {
-			echo '<p class="sdnl__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
+			echo '<p class="nextrlt__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
 			echo '</div>';
 
 			return ob_get_clean();
 		}
 
 		if ( $slider ) {
-			echo '<div class="sdnl__viewport">';
+			echo '<div class="nextrlt__viewport">';
 			printf(
-				'<button type="button" class="sdnl__arrow sdnl__arrow--prev" aria-label="%s">&#8249;</button>',
+				'<button type="button" class="nextrlt__arrow nextrlt__arrow--prev" aria-label="%s">&#8249;</button>',
 				esc_attr__( 'Previous launch', 'next-rocket-launch-tracker' )
 			);
 		}
 
-		echo '<ul class="sdnl__list">';
+		echo '<ul class="nextrlt__list">';
 
 		foreach ( $launches as $launch ) {
 			self::render_launch( $launch, $atts, $tz_mode );
@@ -138,7 +141,7 @@ class SDNL_Shortcode {
 
 		if ( $slider ) {
 			printf(
-				'<button type="button" class="sdnl__arrow sdnl__arrow--next" aria-label="%s">&#8250;</button>',
+				'<button type="button" class="nextrlt__arrow nextrlt__arrow--next" aria-label="%s">&#8250;</button>',
 				esc_attr__( 'Next launch', 'next-rocket-launch-tracker' )
 			);
 			echo '</div>';
@@ -160,21 +163,21 @@ class SDNL_Shortcode {
 		$timestamp = ! empty( $launch['net'] ) ? strtotime( $launch['net'] ) : 0;
 		$status    = isset( $launch['status_abbr'] ) ? $launch['status_abbr'] : '';
 
-		echo '<li class="sdnl__item">';
+		echo '<li class="nextrlt__item">';
 
 		if ( self::is_true( $atts['image'] ) && ! empty( $launch['image'] ) ) {
 			printf(
-				'<div class="sdnl__media"><img class="sdnl__image" src="%1$s" alt="%2$s" loading="lazy" decoding="async" /></div>',
+				'<div class="nextrlt__media"><img class="nextrlt__image" src="%1$s" alt="%2$s" loading="lazy" decoding="async" /></div>',
 				esc_url( $launch['image'] ),
 				esc_attr( $launch['rocket'] ? $launch['rocket'] : $launch['name'] )
 			);
 		}
 
-		echo '<div class="sdnl__body">';
+		echo '<div class="nextrlt__body">';
 
 		if ( self::is_true( $atts['status'] ) && '' !== $status ) {
 			printf(
-				'<span class="sdnl__status sdnl__status--%1$s">%2$s</span>',
+				'<span class="nextrlt__status nextrlt__status--%1$s">%2$s</span>',
 				esc_attr( sanitize_html_class( strtolower( str_replace( ' ', '-', $status ) ) ) ),
 				esc_html( $launch['status'] ? $launch['status'] : $status )
 			);
@@ -182,11 +185,11 @@ class SDNL_Shortcode {
 
 		$headline = $launch['mission'] ? $launch['mission'] : $launch['name'];
 
-		echo '<h4 class="sdnl__name">';
+		echo '<h4 class="nextrlt__name">';
 
 		if ( '' !== trim( (string) $atts['link'] ) ) {
 			printf(
-				'<a class="sdnl__link" href="%1$s">%2$s</a>',
+				'<a class="nextrlt__link" href="%1$s">%2$s</a>',
 				esc_url( $atts['link'] ),
 				esc_html( $headline )
 			);
@@ -213,7 +216,7 @@ class SDNL_Shortcode {
 		}
 
 		if ( ! empty( $meta ) ) {
-			echo '<p class="sdnl__meta">' . esc_html( implode( ' · ', $meta ) ) . '</p>';
+			echo '<p class="nextrlt__meta">' . esc_html( implode( ' · ', $meta ) ) . '</p>';
 		}
 
 		if ( $timestamp ) {
@@ -222,7 +225,7 @@ class SDNL_Shortcode {
 
 		if ( self::is_true( $atts['countdown'] ) && $timestamp ) {
 			printf(
-				'<p class="sdnl__countdown" data-sdnl-countdown data-net="%1$s"><span class="sdnl__countdown-value">%2$s</span></p>',
+				'<p class="nextrlt__countdown" data-nextrlt-countdown data-net="%1$s"><span class="nextrlt__countdown-value">%2$s</span></p>',
 				esc_attr( gmdate( 'c', $timestamp ) ),
 				esc_html( self::static_countdown( $timestamp ) )
 			);
@@ -240,12 +243,12 @@ class SDNL_Shortcode {
 			}
 
 			if ( ! empty( $where ) ) {
-				echo '<p class="sdnl__pad">' . esc_html( implode( ', ', $where ) ) . '</p>';
+				echo '<p class="nextrlt__pad">' . esc_html( implode( ', ', $where ) ) . '</p>';
 			}
 		}
 
 		if ( self::is_true( $atts['description'] ) && ! empty( $launch['mission_desc'] ) ) {
-			echo '<p class="sdnl__description">' . esc_html( wp_trim_words( $launch['mission_desc'], 45 ) ) . '</p>';
+			echo '<p class="nextrlt__description">' . esc_html( wp_trim_words( $launch['mission_desc'], 45 ) ) . '</p>';
 		}
 
 		echo '</div>';
@@ -268,10 +271,10 @@ class SDNL_Shortcode {
 			$text = wp_date( $format, $timestamp );
 		}
 
-		$viewer_attr = ( 'viewer' === $tz_mode ) ? ' data-sdnl-localtime' : '';
+		$viewer_attr = ( 'viewer' === $tz_mode ) ? ' data-nextrlt-localtime' : '';
 
 		printf(
-			'<p class="sdnl__time"><time datetime="%1$s"%2$s>%3$s</time></p>',
+			'<p class="nextrlt__time"><time datetime="%1$s"%2$s>%3$s</time></p>',
 			esc_attr( gmdate( 'c', $timestamp ) ),
 			$viewer_attr, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static literal.
 			esc_html( $text )

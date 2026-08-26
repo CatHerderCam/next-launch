@@ -2,14 +2,17 @@
 /**
  * Plugin settings storage.
  *
- * @package sdnl
+ * @package nextrlt
  */
 
 defined( 'ABSPATH' ) || exit;
 
-class SDNL_Settings {
+/**
+ * Plugin settings storage.
+ */
+class NEXTRLT_Settings {
 
-	const OPTION = 'sdnl_settings';
+	const OPTION = 'nextrlt_settings';
 
 	/**
 	 * Default settings.
@@ -46,14 +49,14 @@ class SDNL_Settings {
 	/**
 	 * Get a single setting.
 	 *
-	 * @param string $key     Setting key.
-	 * @param mixed  $default Fallback if the key is unknown.
+	 * @param string $key      Setting key.
+	 * @param mixed  $fallback Fallback if the key is unknown.
 	 * @return mixed
 	 */
-	public static function get( $key, $default = null ) {
+	public static function get( $key, $fallback = null ) {
 		$all = self::get_all();
 
-		return isset( $all[ $key ] ) ? $all[ $key ] : $default;
+		return isset( $all[ $key ] ) ? $all[ $key ] : $fallback;
 	}
 
 	/**
@@ -70,7 +73,7 @@ class SDNL_Settings {
 		}
 
 		if ( isset( $input['default_locations'] ) ) {
-			$out['default_locations'] = SDNL_API::sanitize_id_list( $input['default_locations'] );
+			$out['default_locations'] = NEXTRLT_API::sanitize_id_list( $input['default_locations'] );
 		}
 
 		if ( isset( $input['default_limit'] ) ) {
