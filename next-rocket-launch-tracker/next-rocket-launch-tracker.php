@@ -1,8 +1,9 @@
 <?php
 /**
  * Plugin Name:       Next Rocket Launch Tracker
+ * Plugin URI:        https://github.com/CatHerderCam/Next-Rocket-Launch-Tracker
  * Description:       Shortcode that displays upcoming rocket launches from the launch locations you choose, using The Space Devs Launch Library 2 API.
- * Version:           1.1.6
+ * Version:           1.1.7
  * Requires at least: 5.8
  * Requires PHP:      7.4
  * Author:            catherdercam
@@ -15,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'NEXTRLT_VERSION', '1.1.6' );
+define( 'NEXTRLT_VERSION', '1.1.7' );
 define( 'NEXTRLT_FILE', __FILE__ );
 define( 'NEXTRLT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'NEXTRLT_URL', plugin_dir_url( __FILE__ ) );

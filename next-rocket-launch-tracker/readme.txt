@@ -4,7 +4,7 @@ Tags: rocket launch, spacex, countdown, shortcode, widget
 Requires at least: 5.8
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -73,7 +73,14 @@ Yes. Without JavaScript the launches simply stack vertically like the non-slider
 
 Yes. If Elementor is active, a "Next Rocket Launch Tracker" widget appears in the widget panel (search for it, or find it under the Next Rocket Launch Tracker category) with the same options as the shortcode.
 
+== Development ==
+
+Found a bug or want to contribute? The source is on GitHub: [github.com/CatHerderCam/Next-Rocket-Launch-Tracker](https://github.com/CatHerderCam/Next-Rocket-Launch-Tracker).
+
 == Changelog ==
+
+= 1.1.7 =
+* Added: `Plugin URI` header and a `== Development ==` readme section linking to the GitHub repository.
 
 = 1.1.6 =
 * Changed: every function, class, option, hook, nonce, shortcode tag, CSS class, and file name now uses the `nextrlt` prefix (was `sdnl`), per WordPress.org plugin review feedback about unique naming.
@@ -111,6 +118,9 @@ Yes. If Elementor is active, a "Next Rocket Launch Tracker" widget appears in th
 * Initial release: `[next_launch]` shortcode, settings screen with location search, WP-Cron-backed caching with stale-response fallback.
 
 == Upgrade Notice ==
+
+= 1.1.7 =
+Adds a GitHub link to the plugin header and readme. No functional changes.
 
 = 1.1.6 =
 Shortcode tag changed from [next_launch] to [nextrlt_next_launch]. Update any posts/pages using the old tag after upgrading.
